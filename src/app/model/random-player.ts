@@ -6,8 +6,8 @@ import { PlayerFactory } from './player-factory';
 export class RandomPlayer implements Player {
     public static factory: PlayerFactory = {
         name: 'Robot-Random',
-        createPlayer: (game: Game, playerColor: PlayerColor) => {
-            return new RandomPlayer(game, playerColor, 300);
+        createPlayer: (game: Game, playerColor: PlayerColor, delayMillis = 300) => {
+            return new RandomPlayer(game, playerColor, delayMillis);
         }
     };
 

@@ -1,33 +1,31 @@
 $cell-width: 150px;
 
 .playGround {
-    display: block;
-    width: $cell-width*3;
-    border: 1px;
-    border-style: solid;
-    border-color: black;
+    .game-container {
+        display: block;
+        width: $cell-width*3;
+        border: 1px;
+        border-style: solid;
+        border-color: black;
 
-    .row {
-        display: flex;
+        .row {
+            display: flex;
 
-        .cell {
-            // background: red;
+            .cell {
+                width: $cell-width;
+                height: $cell-width;
+                border: 1px;
+                border-style: solid;
+                border-color: black;
 
-            width: $cell-width;
-            height: $cell-width;
-            border: 1px;
-            border-style: solid;
-            border-color: black;
+                &.RED {
+                    background: red;
+                }
 
-            &.RED {
-                background: red;
+                &.GREEN {
+                    background: green;
+                }
             }
-            &.GREEN {
-                background: green;
-            }
-
         }
-
     }
-
 }
