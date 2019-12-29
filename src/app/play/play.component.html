@@ -1,1 +1,14 @@
-<p>play works!</p>
+   
+<label for="player1" >Player 1: </label>
+<p-dropdown [options]="availablePlayers" [(ngModel)]="player1" inputId="player1" [disabled]="gameIsRunning" ></p-dropdown>
+<br>
+<label for="player2" >Player 2: </label>
+<p-dropdown [options]="availablePlayers" [(ngModel)]="player2" inputId="player2" [disabled]="gameIsRunning"></p-dropdown>
+<br>
+<ng-container *ngIf="!gameIsRunning">
+    <button pButton type="button" label="Start" (click)="startGame()"></button>
+</ng-container>
+<ng-container *ngIf="gameIsRunning">
+    <button pButton type="button" label="Stop" (click)="stopGame()"></button>
+</ng-container>
+
