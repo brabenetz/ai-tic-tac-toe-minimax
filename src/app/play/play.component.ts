@@ -5,6 +5,7 @@ import { HumanPlayer } from '../model/human-player';
 import { PlayGround } from '../model/play-ground';
 import { TicTacToeGame } from '../model/tic-tac-toe-game';
 import { PlayerColor } from '../model/player-color';
+import { RandomPlayer } from '../model/random-player';
 
 @Component({
     selector: 'app-play',
@@ -35,6 +36,11 @@ export class PlayComponent implements OnInit {
 
         this.availablePlayers = [];
         this.availablePlayers.push(HumanPlayer.factory);
+        this.availablePlayers.push(RandomPlayer.factory);
+    }
+    restartGame(): void {
+        this.stopGame();
+        this.startGame();
     }
 
     stopGame(): void {

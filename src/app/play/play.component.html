@@ -10,6 +10,7 @@
 </ng-container>
 <ng-container *ngIf="gameIsRunning">
     <button pButton type="button" label="Stop" (click)="stopGame()"></button>
+    <button pButton type="button" label="Rerstart" (click)="restartGame()"></button>
 </ng-container>
 
 <app-play-ground [playGround]="playGround" *ngIf="gameIsRunning"></app-play-ground>
