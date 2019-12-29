@@ -1,0 +1,33 @@
+$cell-width: 150px;
+
+.playGround {
+    display: block;
+    width: $cell-width*3;
+    border: 1px;
+    border-style: solid;
+    border-color: black;
+
+    .row {
+        display: flex;
+
+        .cell {
+            // background: red;
+
+            width: $cell-width;
+            height: $cell-width;
+            border: 1px;
+            border-style: solid;
+            border-color: black;
+
+            &.RED {
+                background: red;
+            }
+            &.GREEN {
+                background: green;
+            }
+
+        }
+
+    }
+
+}

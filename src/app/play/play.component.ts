@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api/selectitem';
+import { PlayerFactory } from '../model/player-factory';
+import { HumanPlayer } from '../model/human-player';
+import { PlayGround } from '../model/play-ground';
+import { TicTacToeGame } from '../model/tic-tac-toe-game';
+import { PlayerColor } from '../model/player-color';
 
 @Component({
     selector: 'app-play',
@@ -8,23 +13,28 @@ import { SelectItem } from 'primeng/api/selectitem';
 })
 export class PlayComponent implements OnInit {
 
-    public availablePlayers: SelectItem[];
+    public availablePlayers: PlayerFactory[];
 
-    public player1 = 'human';
+    public player1 = HumanPlayer.factory;
 
-    public player2 = 'human';
+    public player2 = HumanPlayer.factory;
 
     public gameIsRunning = false;
+
+    public playGround: PlayGround;
 
     constructor() { }
 
     ngOnInit() {
-        this.availablePlayers = [
-            { label: 'Human', value: 'human' },
-            { label: 'Robot - Random', value: 'robot-random' },
-            { label: 'Robot - Minimax', value: 'robot-minimax' },
-            { label: 'Robot - Ki - ???', value: 'robot-ki-??' },
-        ];
+        // this.availablePlayers = [
+        //     { label: 'Human', value: 'human' },
+        //     { label: 'Robot - Random', value: 'robot-random' },
+        //     { label: 'Robot - Minimax', value: 'robot-minimax' },
+        //     { label: 'Robot - Ki - ???', value: 'robot-ki-??' },
+        // ];
+
+        this.availablePlayers = [];
+        this.availablePlayers.push(HumanPlayer.factory);
     }
 
     stopGame(): void {
@@ -32,6 +42,10 @@ export class PlayComponent implements OnInit {
     }
 
     startGame(): void {
+        const game = new TicTacToeGame();
+        const player1 = this.player1.createPlayer(game, PlayerColor.RED);
+        const player2 = this.player2.createPlayer(game, PlayerColor.GREEN);
+        this.playGround = new PlayGround(game, player1, player2);
         this.gameIsRunning = true;
     }
 }

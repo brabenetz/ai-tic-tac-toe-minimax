@@ -1,0 +1,21 @@
+<div *ngIf="playGround.game.isGameFinished()">
+    <ng-container *ngIf="playGround.getWinnerName()">
+        The Winner is: {{playGround.getWinnerName()}}
+    </ng-container>
+    <ng-container *ngIf="!playGround.getWinnerName()">
+        No Winner - DRAW
+    </ng-container>
+</div>
+<div *ngIf="!playGround.game.isGameFinished()">
+    Game is Running... Next move: {{playGround.getNextPlayerName()}}.
+</div>
+
+<div class="playGround">
+    <ng-container *ngFor="let row of playGround.game.playGround; let colIdx = index">
+        <div class="row">
+            <ng-container *ngFor="let cell of row; let rawIdx = index">
+                <div class="cell {{playerColorName(cell)}}" (click)="click(colIdx, rawIdx)"></div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
