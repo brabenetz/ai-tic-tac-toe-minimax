@@ -15,6 +15,7 @@ export class RandomPlayer implements Player {
     }
 
     async move(): Promise<void> {
+        // get free Cells for possible moves
         const freeCells: { col: number, row: number }[] = [];
         this.game.playGround.forEach((line, col) => {
             line.forEach((cell, row) => {
@@ -27,6 +28,7 @@ export class RandomPlayer implements Player {
         // pick a random free Cell:
         const selectedCell = freeCells[Math.floor(Math.random() * freeCells.length)];
 
+        // apply small delay for nicer play-animations.
         return new Promise((resolve) => {
             setTimeout(() => {
                 this.game.move(this.playerColor, selectedCell.col, selectedCell.row);
