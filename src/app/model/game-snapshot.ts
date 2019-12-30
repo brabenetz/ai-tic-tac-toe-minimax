@@ -6,7 +6,8 @@ export class GameSnapshot {
         readonly playGround: PlayerColor[][],
         readonly lastPosition: { col: number, row: number },
         readonly lastPlayerColor: PlayerColor,
-        readonly nextPlayerColor: PlayerColor) {
+        readonly nextPlayerColor: PlayerColor,
+        readonly lastMoveWasSuccess: boolean) {
         this.playGround = playGround.map((line) => {
             return line.slice();
         });
@@ -18,6 +19,7 @@ export class GameSnapshot {
             this.playGround,
             this.lastPosition,
             this.lastPlayerColor,
-            this.nextPlayerColor);
+            this.nextPlayerColor,
+            this.lastMoveWasSuccess);
     }
 }

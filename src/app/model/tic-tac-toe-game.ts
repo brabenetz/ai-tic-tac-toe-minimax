@@ -79,7 +79,9 @@ export class TicTacToeGame implements Game {
         this.lastPosition = oldSnapshot.lastPosition;
         this.nextPlayerColor = oldSnapshot.nextPlayerColor;
         this.movesOverall--;
-        this.movesSuccessful--;
+        if (lastSnapshot.lastMoveWasSuccess) {
+            this.movesSuccessful--;
+        }
         this.hasAlreadySearchedForWinner = false;
         this.winnerColor = undefined;
         return true;
@@ -106,7 +108,8 @@ export class TicTacToeGame implements Game {
             this.playGround,
             this.lastPosition,
             this.lastPlayerColor,
-            this.nextPlayerColor));
+            this.nextPlayerColor,
+            success));
         return success;
     }
 
