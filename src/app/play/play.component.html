@@ -18,4 +18,7 @@
         </ng-container>
     </p>
     <app-play-ground [playGround]="playGround" *ngIf="gameIsRunning"></app-play-ground>
+    <p *ngIf="areBothPlayerHuman() && gameIsRunning">
+            <button pButton type="button" label="Revert Last Move" (click)="revertLastMove()"></button>
+    </p>
 </div>

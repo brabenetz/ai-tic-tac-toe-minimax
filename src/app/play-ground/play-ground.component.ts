@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Game } from '../model/game';
 import { PlayGround } from '../model/play-ground';
 import { PlayerColor } from '../model/player-color';
 import { HumanPlayer } from '../model/human-player';
@@ -29,7 +28,6 @@ export class PlayGroundComponent implements OnInit {
         }
         const nextPlayer = this.playGround.getNextPlayer();
         if (nextPlayer instanceof HumanPlayer) {
-            // nextPlayer.move();
             nextPlayer.click(col, row);
         }
     }

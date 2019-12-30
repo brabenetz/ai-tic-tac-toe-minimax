@@ -34,4 +34,14 @@ export class HumanPlayer implements Player {
         this.finishedMove.complete();
     }
 
+    cancleMove(): void {
+        if (!this.isActive) {
+            // do nothing, ignore the click.
+            return;
+        }
+        this.isActive = false;
+        this.finishedMove.next();
+        this.finishedMove.complete();
+    }
+
 }

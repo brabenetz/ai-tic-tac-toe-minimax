@@ -11,7 +11,6 @@ export class PlayGround {
         this.colorToPlayerMap[player2.playerColor] = player2;
         this.colorToPlayerNameMap[player1.playerColor] = 'Player-1 ' + PlayerColor[player1.playerColor];
         this.colorToPlayerNameMap[player2.playerColor] = 'Player-2 ' + PlayerColor[player2.playerColor];
-        game.nextPlayerColor = player1.playerColor;
         this.startGame();
     }
 
@@ -28,7 +27,6 @@ export class PlayGround {
     }
 
     async startGame() {
-        await this.player1.move();
         while (!this.game.isGameFinished()) {
             await this.getNextPlayer().move();
         }

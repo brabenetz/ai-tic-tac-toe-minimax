@@ -1,5 +1,6 @@
 import { Game } from './game';
 import { PlayerColor, PlayerColorUtil } from './player-color';
+import { GameSnapshot } from './game-snapshot';
 
 
 export class TicTacToeGame implements Game {
@@ -8,6 +9,7 @@ export class TicTacToeGame implements Game {
 
     rows = 3;
     cols = 3;
+    history: GameSnapshot[];
     playGround: PlayerColor[][];
     lastPosition: { col: number, row: number };
     lastPlayerColor: PlayerColor;
@@ -23,10 +25,11 @@ export class TicTacToeGame implements Game {
     }
 
     reset() {
+        this.history = [];
         this.playGround = new Array(this.cols).fill(undefined).map(() => new Array(this.rows).fill(PlayerColor.FREE));
         this.lastPosition = undefined;
         this.lastPlayerColor = undefined;
-        this.nextPlayerColor = undefined;
+        this.nextPlayerColor = PlayerColor.RED;
         this.winnerColor = undefined;
         this.movesSuccessful = 0;
         this.movesOverall = 0;
@@ -39,7 +42,6 @@ export class TicTacToeGame implements Game {
         }
         const success = this.setColor(playerColor, col, row);
         this.movesOverall++;
-        // this.gameHistory.push(this.gameState.copy());
         if (success) {
             this.movesSuccessful++;
             this.hasAlreadySearchedForWinner = false;
@@ -51,6 +53,38 @@ export class TicTacToeGame implements Game {
         return success;
     }
 
+    revertMove(playerColor: PlayerColor, col: number, row: number): boolean {
+        const lastSnapshot = this.history.pop();
+
+        if (lastSnapshot.lastPosition.col !== col || lastSnapshot.lastPosition.row !== row) {
+            console.warn(`Cannot revert move with col=${col} row=${row},
+            because it doesn't match the last Position col=${this.lastPosition.col} row=${this.lastPosition.col}.`);
+            this.history.push(lastSnapshot);
+            return false;
+        }
+        if (lastSnapshot.lastPlayerColor !== playerColor) {
+            console.warn(`Cannot revert move for playerColor=${PlayerColor[playerColor]},
+            because it doesn't match the last PlayerColor col=${PlayerColor[lastSnapshot.lastPlayerColor]}.`);
+            this.history.push(lastSnapshot);
+            return false;
+        }
+        if (this.history.length === 0) {
+            this.reset();
+            return true;
+        }
+        const oldSnapshot = this.history[this.history.length - 1].copy();
+
+        this.playGround = oldSnapshot.playGround;
+        this.lastPlayerColor = oldSnapshot.lastPlayerColor;
+        this.lastPosition = oldSnapshot.lastPosition;
+        this.nextPlayerColor = oldSnapshot.nextPlayerColor;
+        this.movesOverall--;
+        this.movesSuccessful--;
+        this.hasAlreadySearchedForWinner = false;
+        this.winnerColor = undefined;
+        return true;
+    }
+
     getColor(col: number, row: number) {
         return this.playGround[col][row];
     }
@@ -59,13 +93,21 @@ export class TicTacToeGame implements Game {
         this.lastPlayerColor = playerColor;
         this.nextPlayerColor = PlayerColorUtil.opposite(playerColor);
 
+        let success: boolean;
         if (this.getColor(col, row) === PlayerColor.FREE) {
             this.playGround[col][row] = playerColor;
             this.lastPosition = { col, row };
-            return true;
+
+            success = true;
         } else {
-            return false;
+            success = false;
         }
+        this.history.push(new GameSnapshot(
+            this.playGround,
+            this.lastPosition,
+            this.lastPlayerColor,
+            this.nextPlayerColor));
+        return success;
     }
 
     isGameFinished() {

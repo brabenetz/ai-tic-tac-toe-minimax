@@ -54,4 +54,28 @@ export class PlayComponent implements OnInit {
         this.playGround = new PlayGround(game, player1, player2);
         this.gameIsRunning = true;
     }
+
+    areBothPlayerHuman() {
+        return this.player1 === HumanPlayer.factory && this.player2  === HumanPlayer.factory;
+    }
+
+    revertLastMove() {
+        const wasFinished = this.playGround.game.isGameFinished();
+        const currentPlayer = this.playGround.getNextPlayer();
+        const history = this.playGround.game.history;
+        const lastGameSnapshot = history[history.length - 1];
+        const success = this.playGround.game.revertMove(
+            lastGameSnapshot.lastPlayerColor,
+            lastGameSnapshot.lastPosition.col,
+            lastGameSnapshot.lastPosition.row);
+        if (success) {
+            if (currentPlayer instanceof HumanPlayer) {
+                currentPlayer.cancleMove();
+            }
+            if (wasFinished) {
+                // restart movings until finished.
+                this.playGround.startGame();
+            }
+        }
+    }
 }
