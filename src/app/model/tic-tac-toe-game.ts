@@ -1,6 +1,7 @@
 import { Game } from './game';
 import { PlayerColor, PlayerColorUtil } from './player-color';
 import { GameSnapshot } from './game-snapshot';
+import * as _ from 'lodash';
 
 
 export class TicTacToeGame implements Game {
@@ -72,7 +73,7 @@ export class TicTacToeGame implements Game {
             this.reset();
             return true;
         }
-        const oldSnapshot = this.history[this.history.length - 1].copy();
+        const oldSnapshot = _.last(this.history).copy();
 
         this.playGround = oldSnapshot.playGround;
         this.lastPlayerColor = oldSnapshot.lastPlayerColor;

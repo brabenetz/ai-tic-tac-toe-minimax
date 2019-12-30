@@ -2,6 +2,7 @@ import { Player } from './player';
 import { Game } from './game';
 import { PlayerColor } from './player-color';
 import { PlayerFactory } from './player-factory';
+import * as _ from 'lodash';
 
 export class RandomPlayer implements Player {
     public static factory: PlayerFactory = {
@@ -26,7 +27,7 @@ export class RandomPlayer implements Player {
         });
 
         // pick a random free Cell:
-        const selectedCell = freeCells[Math.floor(Math.random() * freeCells.length)];
+        const selectedCell = _.sample(freeCells);
 
         // apply small delay for nicer play-animations.
         return new Promise((resolve) => {

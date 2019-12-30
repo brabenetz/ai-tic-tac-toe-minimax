@@ -1,4 +1,5 @@
 import { PlayerColor } from './player-color';
+import * as _ from 'lodash';
 
 export class GameSnapshot {
 
@@ -8,9 +9,7 @@ export class GameSnapshot {
         readonly lastPlayerColor: PlayerColor,
         readonly nextPlayerColor: PlayerColor,
         readonly lastMoveWasSuccess: boolean) {
-        this.playGround = playGround.map((line) => {
-            return line.slice();
-        });
+        this.playGround = _.cloneDeep(playGround);
         this.lastPosition = { ...lastPosition };
     }
 

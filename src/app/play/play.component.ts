@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api/selectitem';
 import { PlayerFactory } from '../model/player-factory';
 import { HumanPlayer } from '../model/human-player';
 import { PlayGround } from '../model/play-ground';
 import { TicTacToeGame } from '../model/tic-tac-toe-game';
 import { PlayerColor } from '../model/player-color';
 import { RandomPlayer } from '../model/random-player';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-play',
@@ -63,7 +63,7 @@ export class PlayComponent implements OnInit {
         const wasFinished = this.playGround.game.isGameFinished();
         const currentPlayer = this.playGround.getNextPlayer();
         const history = this.playGround.game.history;
-        const lastGameSnapshot = history[history.length - 1];
+        const lastGameSnapshot = _.last(history);
         const success = this.playGround.game.revertMove(
             lastGameSnapshot.lastPlayerColor,
             lastGameSnapshot.lastPosition.col,
