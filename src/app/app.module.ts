@@ -1,8 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
-import { DropdownModule, Dropdown } from 'primeng/dropdown';
+import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +26,7 @@ import { PlayGroundComponent } from './play-ground/play-ground.component';
         MenubarModule,
         DropdownModule,
         ButtonModule,
+        CheckboxModule,
     ],
     providers: [],
     bootstrap: [AppComponent]

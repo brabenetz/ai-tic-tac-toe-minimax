@@ -21,6 +21,8 @@ export class PlayComponent implements OnInit {
 
     public player2 = HumanPlayer.factory;
 
+    public showMinimaxPrediction = false;
+
     public gameIsRunning = false;
 
     public playGround: PlayGround;

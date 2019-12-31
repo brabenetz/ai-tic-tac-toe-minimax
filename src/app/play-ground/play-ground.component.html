@@ -19,7 +19,7 @@
             <div class="row">
                 <ng-container *ngFor="let cell of row; let rawIdx = index">
                     <div class="cell {{playerColorName(cell)}}" (click)="click(colIdx, rawIdx)">
-                        <!-- {{getMinimaxPrediction(colIdx, rawIdx)}} -->
+                        <ng-container *ngIf="showMinimaxPrediction">{{getMinimaxPrediction(colIdx, rawIdx)}}</ng-container>
                     </div>
                 </ng-container>
             </div>

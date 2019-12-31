@@ -12,6 +12,7 @@ import { MinimaxPlayer } from '../model/minimax-player';
 export class PlayGroundComponent implements OnInit {
 
     @Input() playGround: PlayGround;
+    @Input() showMinimaxPrediction: boolean;
 
     constructor() { }
 
