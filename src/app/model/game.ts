@@ -9,4 +9,5 @@ export interface Game {
     revertMove(playerColor: PlayerColor, col: number, row: number): boolean;
     isGameFinished(): boolean;
     findWinner(): PlayerColor;
+    copy(): Game;
 }

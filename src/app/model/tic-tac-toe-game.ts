@@ -37,6 +37,22 @@ export class TicTacToeGame implements Game {
         this.hasAlreadySearchedForWinner = true; // empty game: no need to search
     }
 
+    copy() {
+        const game = new TicTacToeGame();
+        game.rows = this.rows;
+        game.cols = this.cols;
+        game.history = _.clone(this.history);
+        game.playGround = _.cloneDeep(this.playGround);
+        game.lastPosition = this.lastPosition;
+        game.lastPlayerColor = this.lastPlayerColor;
+        game.nextPlayerColor = this.nextPlayerColor;
+        game.winnerColor = this.winnerColor;
+        game.movesSuccessful = this.movesSuccessful;
+        game.movesOverall = this.movesOverall;
+        game.hasAlreadySearchedForWinner = this.hasAlreadySearchedForWinner;
+        return game;
+    }
+
     move(playerColor: PlayerColor, col: number, row: number): boolean {
         if (this.isGameFinished()) {
             return false;
@@ -118,11 +134,10 @@ export class TicTacToeGame implements Game {
         this.findWinner();
 
         if (this.winnerColor !== undefined) {
-            console.log('isGameFinished - found winnerColor', this.winnerColor);
             return true;
         }
         if (this.movesSuccessful === this.rows * this.cols) {
-            console.log('isGameFinished - movesSuccessful === this.rows * this.cols', this.winnerColor);
+            // console.log('isGameFinished - movesSuccessful === this.rows * this.cols', this.winnerColor);
             return true;
         }
         if (this.movesOverall >= TicTacToeGame.MAX_MOVES) {

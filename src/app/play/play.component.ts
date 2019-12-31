@@ -6,6 +6,7 @@ import { TicTacToeGame } from '../model/tic-tac-toe-game';
 import { PlayerColor } from '../model/player-color';
 import { RandomPlayer } from '../model/random-player';
 import * as _ from 'lodash';
+import { MinimaxPlayer } from '../model/minimax-player';
 
 @Component({
     selector: 'app-play',
@@ -37,6 +38,7 @@ export class PlayComponent implements OnInit {
         this.availablePlayers = [];
         this.availablePlayers.push(HumanPlayer.factory);
         this.availablePlayers.push(RandomPlayer.factory);
+        this.availablePlayers.push(MinimaxPlayer.factory);
     }
     restartGame(): void {
         this.stopGame();

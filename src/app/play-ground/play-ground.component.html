@@ -18,7 +18,9 @@
         <ng-container *ngFor="let row of playGround.game.playGround; let colIdx = index">
             <div class="row">
                 <ng-container *ngFor="let cell of row; let rawIdx = index">
-                    <div class="cell {{playerColorName(cell)}}" (click)="click(colIdx, rawIdx)"></div>
+                    <div class="cell {{playerColorName(cell)}}" (click)="click(colIdx, rawIdx)">
+                        <!-- {{getMinimaxPrediction(colIdx, rawIdx)}} -->
+                    </div>
                 </ng-container>
             </div>
         </ng-container>
