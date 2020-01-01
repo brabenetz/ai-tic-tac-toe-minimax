@@ -1,22 +1,38 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { PlayGround } from '../model/play-ground';
 import { PlayerColor } from '../model/player-color';
 import { HumanPlayer } from '../model/human-player';
 import { MinimaxPlayer } from '../model/minimax-player';
+import * as _ from 'lodash';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-play-ground',
     templateUrl: './play-ground.component.html',
     styleUrls: ['./play-ground.component.scss']
 })
-export class PlayGroundComponent implements OnInit {
+export class PlayGroundComponent implements OnChanges {
 
     @Input() playGround: PlayGround;
     @Input() showMinimaxPrediction: boolean;
 
+    private gamePlayGroundSubscription: Subscription;
+    private minimaxPrediction: number[][];
+
     constructor() { }
 
-    ngOnInit() {
+    ngOnChanges(changes: SimpleChanges): void {
+        if (_.get(changes, 'playGround')) {
+            if (this.gamePlayGroundSubscription) {
+                this.gamePlayGroundSubscription.unsubscribe();
+            }
+            this.gamePlayGroundSubscription = this.playGround.game.playGroundSubject
+                .subscribe((game) => {
+                    const gameClone = game.copy();
+                    const currentPlayerColor = gameClone.nextPlayerColor;
+                    this.minimaxPrediction = MinimaxPlayer.minimax(gameClone, currentPlayerColor).scores;
+                });
+        }
     }
 
     playerColorName(playerColor: PlayerColor) {
@@ -35,19 +51,6 @@ export class PlayGroundComponent implements OnInit {
     }
 
     getMinimaxPrediction(col: number, row: number) {
-        if (this.playGround.game.playGround[col][row] !== PlayerColor.FREE || this.playGround.game.isGameFinished()) {
-            return undefined;
-        }
-        const gameClone = this.playGround.game.copy();
-        const playerColor = gameClone.nextPlayerColor;
-
-        const success = gameClone.move(playerColor, col, row);
-        if (!success) {
-            console.log('current playground: ', gameClone.playGround);
-            throw new Error(`move for player ${PlayerColor[playerColor]} to ${col}/${row} was not success.`);
-        }
-        const score = MinimaxPlayer.getScore(gameClone, playerColor);
-        gameClone.revertMove(playerColor, col, row);
-        return MinimaxPlayer.getScoreName(score);
+        return MinimaxPlayer.getScoreName(this.minimaxPrediction[col][row]);
     }
 }

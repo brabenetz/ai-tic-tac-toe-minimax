@@ -2,6 +2,7 @@ import { Game } from './game';
 import { PlayerColor, PlayerColorUtil } from './player-color';
 import { GameSnapshot } from './game-snapshot';
 import * as _ from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 
 
 export class TicTacToeGame implements Game {
@@ -12,6 +13,7 @@ export class TicTacToeGame implements Game {
     cols = 3;
     history: GameSnapshot[];
     playGround: PlayerColor[][];
+    playGroundSubject = new BehaviorSubject<Game>(this);
     lastPosition: { col: number, row: number };
     lastPlayerColor: PlayerColor;
     nextPlayerColor: PlayerColor;
@@ -31,10 +33,14 @@ export class TicTacToeGame implements Game {
         this.lastPosition = undefined;
         this.lastPlayerColor = undefined;
         this.nextPlayerColor = PlayerColor.RED;
-        this.winnerColor = undefined;
         this.movesSuccessful = 0;
         this.movesOverall = 0;
-        this.hasAlreadySearchedForWinner = true; // empty game: no need to search
+        this.resetFindWinner();
+        this.playGroundSubject.next(this);
+    }
+    resetFindWinner(): void {
+        this.winnerColor = undefined;
+        this.hasAlreadySearchedForWinner = false;
     }
 
     copy() {
@@ -101,6 +107,7 @@ export class TicTacToeGame implements Game {
         }
         this.hasAlreadySearchedForWinner = false;
         this.winnerColor = undefined;
+        this.playGroundSubject.next(this);
         return true;
     }
 
@@ -116,6 +123,7 @@ export class TicTacToeGame implements Game {
         if (this.getColor(col, row) === PlayerColor.FREE) {
             this.playGround[col][row] = playerColor;
             this.lastPosition = { col, row };
+            this.playGroundSubject.next(this);
 
             success = true;
         } else {
@@ -136,8 +144,8 @@ export class TicTacToeGame implements Game {
         if (this.winnerColor !== undefined) {
             return true;
         }
-        if (this.movesSuccessful === this.rows * this.cols) {
-            // console.log('isGameFinished - movesSuccessful === this.rows * this.cols', this.winnerColor);
+        if (_.findIndex(_.flatten(this.playGround), (v) => v === PlayerColor.FREE) === -1) {
+            // no free field anymore -> DRAW
             return true;
         }
         if (this.movesOverall >= TicTacToeGame.MAX_MOVES) {

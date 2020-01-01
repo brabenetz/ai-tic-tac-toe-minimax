@@ -5,8 +5,9 @@ import { PlayerFactory } from './player-factory';
 import * as _ from 'lodash';
 
 interface MinimaxResult {
-    position: { col: number, row: number };
-    score: number;
+    scores: number[][];
+    bestPosition: { col: number, row: number };
+    bestScore: number;
 }
 
 /** Minimax is explaned in 'Coding Challenge 154': https://youtu.be/trKjYdBASyQ from the https://thecodingtrain.com  */
@@ -30,33 +31,50 @@ export class MinimaxPlayer implements Player {
     static minimax(game: Game, playerColor: PlayerColor): MinimaxResult {
         const currentPlayerColor = game.nextPlayerColor;
         const isMaximizing = playerColor === currentPlayerColor;
-        const best: MinimaxResult = { position: { col: -1, row: -1 }, score: isMaximizing ? -Infinity : Infinity };
+        const result: MinimaxResult = {
+            scores: new Array(game.cols).fill(undefined).map(() => new Array(game.rows)),
+            bestPosition: { col: -1, row: -1 },
+            bestScore: isMaximizing ? -Infinity : Infinity
+        };
+        if (game.isGameFinished()) {
+            return result;
+        }
+
+        // console.log('init scores: ', result.scores);
         const playGround = _.cloneDeep(game.playGround);
         playGround.forEach((column, col) => {
             column.forEach((cell, row) => {
                 if (cell === PlayerColor.FREE) {
-                    if (!game.move(currentPlayerColor, col, row)) {
-                        console.log('current playground: ', game.playGround);
-                        throw new Error(`move for player ${PlayerColor[currentPlayerColor]} to ${col}/${row} was not success.`);
-                    }
+                    // make move without TRAKING history
+                    game.nextPlayerColor = PlayerColorUtil.opposite(currentPlayerColor);
+                    game.playGround[col][row] = currentPlayerColor;
+                    // if (!game.move(currentPlayerColor, col, row)) {
+                    //     console.log('current playground: ', game.playGround);
+                    //     throw new Error(`move for player ${PlayerColor[currentPlayerColor]} to ${col}/${row} was not success.`);
+                    // }
+
                     const score = MinimaxPlayer.getScore(game, playerColor);
 
-                    if (isMaximizing && score > best.score) {
-                        best.score = score;
-                        best.position = { col, row };
-                    } else if (!isMaximizing && score < best.score) {
-                        best.score = score;
-                        best.position = { col, row };
+                    result.scores[col][row] = score;
+                    if (isMaximizing && score > result.bestScore) {
+                        result.bestScore = score;
+                        result.bestPosition = { col, row };
+                    } else if (!isMaximizing && score < result.bestScore) {
+                        result.bestScore = score;
+                        result.bestPosition = { col, row };
                     }
-
-                    if (!game.revertMove(currentPlayerColor, col, row)) {
-                        console.log('current playground: ', game.playGround);
-                        throw new Error(`move for player ${PlayerColor[currentPlayerColor]} to ${col}/${row} was not success.`);
-                    }
+                    // revert move
+                    game.playGround[col][row] = PlayerColor.FREE;
+                    game.nextPlayerColor = currentPlayerColor;
+                    game.resetFindWinner();
+                    // if (!game.revertMove(currentPlayerColor, col, row)) {
+                    //     console.log('current playground: ', game.playGround);
+                    //     throw new Error(`move for player ${PlayerColor[currentPlayerColor]} to ${col}/${row} was not success.`);
+                    // }
                 }
             });
         });
-        return best;
+        return result;
     }
 
     static getScoreName(score: number): string {
@@ -76,18 +94,18 @@ export class MinimaxPlayer implements Player {
                 return 0;
             }
         } else {
-            return MinimaxPlayer.minimax(game, playerColor).score;
+            return MinimaxPlayer.minimax(game, playerColor).bestScore;
         }
     }
 
     async move(): Promise<void> {
         // get free Cells for possible moves
-        const best: MinimaxResult = MinimaxPlayer.minimax(this.game.copy(), this.playerColor);
+        const minimax: MinimaxResult = MinimaxPlayer.minimax(this.game.copy(), this.playerColor);
 
         // apply small delay for nicer play-animations.
         return new Promise((resolve) => {
             setTimeout(() => {
-                this.game.move(this.playerColor, best.position.col, best.position.row);
+                this.game.move(this.playerColor, minimax.bestPosition.col, minimax.bestPosition.row);
                 resolve();
             }, this.delayMillis);
         });
