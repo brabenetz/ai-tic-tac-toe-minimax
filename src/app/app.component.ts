@@ -17,6 +17,12 @@ export class AppComponent implements OnInit {
                 label: 'Play',
                 icon: 'pi pi-fw pi-play',
                 routerLink: 'play',
+            },
+            {
+                label: 'Info',
+                icon: 'pi pi-fw pi-info',
+                routerLink: 'information',
+                styleClass: 'menubar-information',
             }
         ];
     }

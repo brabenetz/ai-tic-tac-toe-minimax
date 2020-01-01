@@ -1,5 +1,15 @@
 :host ::ng-deep {
-    .ui-menubar {
-        background-color: #dfd;
+    p-menubar {
+        .ui-menubar {
+            background-color: #dfd;
+            .ui-menuitem, .ui-menuitem.ui-menuitem-active {
+                .menubar-information {
+                    .ui-menuitem-icon,
+                    .ui-menuitem-text {
+                        color: blue;
+                    }
+                }
+            }
+        }
     }
 }

@@ -11,12 +11,14 @@ import { PlayComponent } from './play/play.component';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayGroundComponent } from './play-ground/play-ground.component';
+import { InformationComponent } from './information/information.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         PlayComponent,
         PlayGroundComponent,
+        InformationComponent,
     ],
     imports: [
         FormsModule,
