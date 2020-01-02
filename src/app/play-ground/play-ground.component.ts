@@ -28,9 +28,11 @@ export class PlayGroundComponent implements OnChanges {
             }
             this.gamePlayGroundSubscription = this.playGround.game.playGroundSubject
                 .subscribe((game) => {
-                    const gameClone = game.copy();
-                    const currentPlayerColor = gameClone.nextPlayerColor;
-                    this.minimaxPrediction = MinimaxPlayer.minimax(gameClone, currentPlayerColor).scores;
+                    if (this.showMinimaxPrediction) {
+                        const gameClone = game.copy();
+                        const currentPlayerColor = gameClone.nextPlayerColor;
+                        this.minimaxPrediction = MinimaxPlayer.minimax(gameClone, currentPlayerColor).scores;
+                    }
                 });
         }
     }
@@ -51,10 +53,27 @@ export class PlayGroundComponent implements OnChanges {
     }
 
     getMinimaxPrediction(col: number, row: number) {
+        if (!this.minimaxPrediction) {
+            return;
+        }
         const score = this.minimaxPrediction[col][row];
         if (score !== undefined) {
             const scoreName = MinimaxPlayer.getScoreName(score);
             return `${scoreName} (${score})`;
         }
+    }
+    getCellCss(col: number, row: number): string {
+        const playerColor = this.playGround.game.playGround[col][row];
+        let cssStyle = `cell`;
+        if (playerColor !== undefined) {
+            cssStyle += ` ${this.playerColorName(playerColor)}`;
+            if (this.playGround.game.lastPosition
+                && this.playGround.game.lastPosition.col === col
+                && this.playGround.game.lastPosition.row === row) {
+                // animate last made move.
+                cssStyle += ' animate';
+            }
+        }
+        return cssStyle;
     }
 }

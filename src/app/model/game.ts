@@ -6,6 +6,7 @@ export interface Game {
     rows: number;
     cols: number;
     history: GameSnapshot[];
+    lastPosition: { col: number, row: number };
     nextPlayerColor: PlayerColor;
     playGround: PlayerColor[][];
     playGroundSubject: BehaviorSubject<Game>;
