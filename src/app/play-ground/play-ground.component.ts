@@ -51,6 +51,10 @@ export class PlayGroundComponent implements OnChanges {
     }
 
     getMinimaxPrediction(col: number, row: number) {
-        return MinimaxPlayer.getScoreName(this.minimaxPrediction[col][row]);
+        const score = this.minimaxPrediction[col][row];
+        if (score !== undefined) {
+            const scoreName = MinimaxPlayer.getScoreName(score);
+            return `${scoreName} (${score})`;
+        }
     }
 }

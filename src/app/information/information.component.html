@@ -9,4 +9,16 @@
 
 <h3>Robot - Minimax</h3>
 <p>The 'perfect' player! But also the slowest. It tries out all possible combinations to decide the best move.</p>
-<p>A detailed explanation about the algorithm can be found on <a href="https://thecodingtrain.com">thecodingtrain.com</a> the <a href="https://youtu.be/trKjYdBASyQ">Coding Challenge 154</a>.</p>
+<p>A detailed explanation about the algorithm can be found on
+    <a href="https://thecodingtrain.com">thecodingtrain.com</a> the <a href="https://youtu.be/trKjYdBASyQ">
+        Coding Challenge 154
+    </a>.
+</p>
+<p>
+    In additional to the simple rules to categories WIN, DRAW and LOSS, this minimax implementation has two
+    improvements:
+</p>
+<ul>
+    <li>Uses the <b>depth</b> in the score to prefer winning faster and losing slower.</li>
+    <li>Small adjustment of the score to prefer <b>DRAW</b>s with higher possibilities to win and lower possibilities to lose</li>
+</ul>

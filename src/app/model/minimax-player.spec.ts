@@ -26,7 +26,7 @@ describe('MinimaxPlayer', () => {
             // console.log('PlayerGround', game.playGround);
             const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
 
-            expect(result.bestScore).toEqual(1);
+            expect(result.bestScore).toBeCloseTo(1.4, 1);
             expect(result.bestPosition).toEqual({ col: 2, row: 1 });
         });
         it('returns only available solution with right score for draw', async () => {
@@ -47,7 +47,7 @@ describe('MinimaxPlayer', () => {
             // console.log('PlayerGround', game.playGround);
             const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
 
-            expect(result.bestScore).toEqual(0);
+            expect(result.bestScore).toBeCloseTo(0, 1);
             expect(result.bestPosition).toEqual({ col: 0, row: 1 });
         });
         it('returns only available solution to get at least a draw from 2 left choices', async () => {
@@ -67,7 +67,7 @@ describe('MinimaxPlayer', () => {
             const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.GREEN);
 
             // console.log('result', result);
-            expect(result.bestScore).toEqual(0);
+            expect(result.bestScore).toBeCloseTo(0, 1);
             expect(result.bestPosition).toEqual({ col: 2, row: 1 });
         });
         it('returns only available solution to get at least a draw from 8 left choices', async () => {
@@ -78,10 +78,10 @@ describe('MinimaxPlayer', () => {
             const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.GREEN);
 
             // console.log('result', result);
-            expect(result.bestScore).toEqual(0);
+            expect(result.bestScore).toBeCloseTo(0, 1);
             expect(result.bestPosition).toEqual({ col: 1, row: 1 });
         });
-        it('returns result available solution to win', async () => {
+        it('returns fastest solution to win - variant 1', async () => {
             // Scenario (x=RED, 0=GREEN):
             // x x
             //   o
@@ -99,8 +99,29 @@ describe('MinimaxPlayer', () => {
             const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
 
             // console.log('result', result);
-            expect(result.bestScore).toEqual(1);
+            expect(result.bestScore).toBeCloseTo(1.4, 1);
             expect(result.bestPosition).toEqual({ col: 0, row: 2 });
+        });
+        it('returns fastest solution to win - variant 2', async () => {
+            // Scenario (x=RED, 0=GREEN):
+            // x
+            // x o o
+            //
+            const game = new TicTacToeGame();
+            game.move(PlayerColor.RED, 0, 0);
+            game.move(PlayerColor.GREEN, 1, 1);
+            game.move(PlayerColor.RED, 1, 0);
+            game.move(PlayerColor.GREEN, 1, 2);
+
+            // console.log('PlayerGround', game.playGround);
+            // game.playGround.forEach(line => {
+            //     console.log('\t\t\t' + line);
+            // });
+            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
+
+            // console.log('result', result);
+            expect(result.bestScore).toBeCloseTo(1.4, 1);
+            expect(result.bestPosition).toEqual({ col: 2, row: 0 });
         });
         it('returns values for an empty board', async () => {
             // Scenario: Empty Playground
@@ -113,7 +134,7 @@ describe('MinimaxPlayer', () => {
             const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
 
             // console.log('result', result);
-            expect(result.bestScore).toEqual(0);
+            expect(result.bestScore).toBeCloseTo(0, 1);
             expect(result.bestPosition).toEqual({ col: 0, row: 0 });
         });
     });

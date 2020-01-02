@@ -28,7 +28,7 @@ export class MinimaxPlayer implements Player {
     constructor(private game: Game, public playerColor: PlayerColor, private delayMillis: number) {
     }
 
-    static minimax(game: Game, playerColor: PlayerColor): MinimaxResult {
+    static minimax(game: Game, playerColor: PlayerColor, depth = 0): MinimaxResult {
         const currentPlayerColor = game.nextPlayerColor;
         const isMaximizing = playerColor === currentPlayerColor;
         const result: MinimaxResult = {
@@ -53,7 +53,7 @@ export class MinimaxPlayer implements Player {
                     //     throw new Error(`move for player ${PlayerColor[currentPlayerColor]} to ${col}/${row} was not success.`);
                     // }
 
-                    const score = MinimaxPlayer.getScore(game, playerColor);
+                    const score = MinimaxPlayer.getScore(game, playerColor, depth);
 
                     result.scores[col][row] = score;
                     if (isMaximizing && score > result.bestScore) {
@@ -74,33 +74,49 @@ export class MinimaxPlayer implements Player {
                 }
             });
         });
+        if (Math.round(result.bestScore) === 0) {
+            // small correction: prefer moves with higher chance to win and lower chance to loss:
+            _.flatten(result.scores).forEach((prediction) => {
+                if (prediction !== undefined) {
+                    if (isMaximizing) {
+                        result.bestScore -= (prediction * 0.001);
+                    } else {
+                        result.bestScore += (prediction * 0.001);
+                    }
+                }
+            });
+        }
+        result.bestScore = _.round(result.bestScore, 5);
+
         return result;
     }
 
     static getScoreName(score: number): string {
-        return this.scorToNameMap[score];
+        return this.scorToNameMap[Math.round(score)];
     }
 
-    static getScore(game: Game, playerColor: PlayerColor): number {
+    static getScore(game: Game, playerColor: PlayerColor, depth: number): number {
         if (game.isGameFinished()) {
+            // depthCorrection: prefer shorter games: win faster or loss slower
+            const depthCorrection = .4 - (0.001 * depth);
             const winner = game.findWinner();
 
             if (winner === playerColor) {
                 // console.log(`Winner: ${PlayerColor[winner]}; player: ${PlayerColor[playerColor]}`);
-                return 1;
+                return 1 + depthCorrection;
             } else if (winner === PlayerColorUtil.opposite(playerColor)) {
-                return -1;
+                return -1 - depthCorrection;
             } else {
                 return 0;
             }
         } else {
-            return MinimaxPlayer.minimax(game, playerColor).bestScore;
+            return MinimaxPlayer.minimax(game, playerColor, depth + 1).bestScore;
         }
     }
 
     async move(): Promise<void> {
         // get free Cells for possible moves
-        const minimax: MinimaxResult = MinimaxPlayer.minimax(this.game.copy(), this.playerColor);
+        const minimax: MinimaxResult = MinimaxPlayer.minimax(this.game.copy(), this.playerColor, 0);
 
         // apply small delay for nicer play-animations.
         return new Promise((resolve) => {
