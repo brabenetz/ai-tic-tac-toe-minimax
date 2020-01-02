@@ -81,9 +81,8 @@ export class MinimaxPlayer implements Player {
             // small correction: prefer moves with higher chance to win and lower chance to loss:
             _.flatten(result.scores).forEach((prediction) => {
                 if (prediction !== undefined) {
-                    if (isMaximizing) {
-                        result.bestScore -= (prediction * 0.001);
-                    } else {
+                    if (!isMaximizing) {
+                        // only count opposite posibilities to lose, because minimax itself will always do the best move.
                         result.bestScore += (prediction * 0.001);
                     }
                 }
