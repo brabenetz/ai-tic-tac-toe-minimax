@@ -45,7 +45,7 @@ export class MinimaxPlayer implements Player {
         playGround.forEach((column, col) => {
             column.forEach((cell, row) => {
                 if (cell === PlayerColor.FREE) {
-                    // make move without TRAKING history
+                    // make move without TRAKING history (is al ittle bit faster)
                     game.nextPlayerColor = PlayerColorUtil.opposite(currentPlayerColor);
                     game.playGround[col][row] = currentPlayerColor;
                     // if (!game.move(currentPlayerColor, col, row)) {
@@ -63,7 +63,7 @@ export class MinimaxPlayer implements Player {
                         result.bestScore = score;
                         result.bestPosition = { col, row };
                     }
-                    // revert move
+                    // revert move without un-traking history
                     game.playGround[col][row] = PlayerColor.FREE;
                     game.nextPlayerColor = currentPlayerColor;
                     game.resetFindWinner();
@@ -74,6 +74,9 @@ export class MinimaxPlayer implements Player {
                 }
             });
         });
+
+        // small correction if prediction is DRAW, adjust it by count the possible wins or loses of all scores
+        // In other words: hoping the opponent makes NOT the best move.
         if (Math.round(result.bestScore) === 0) {
             // small correction: prefer moves with higher chance to win and lower chance to loss:
             _.flatten(result.scores).forEach((prediction) => {
