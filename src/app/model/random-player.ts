@@ -5,12 +5,16 @@ import { PlayerFactory } from './player-factory';
 import * as _ from 'lodash';
 
 export class RandomPlayer implements Player {
-    public static factory: PlayerFactory = {
-        name: 'Robot-Random',
-        createPlayer: (game: Game, playerColor: PlayerColor, delayMillis = 300) => {
-            return new RandomPlayer(game, playerColor, delayMillis);
-        }
-    };
+    public static factory: PlayerFactory = RandomPlayer.createFactory(300);
+
+    public static createFactory(delayMillis: number): PlayerFactory {
+        return {
+            name: 'Robot-Random',
+            createPlayer: (game: Game, playerColor: PlayerColor) => {
+                return new RandomPlayer(game, playerColor, delayMillis);
+            }
+        };
+    }
 
     constructor(private game: Game, public playerColor: PlayerColor, private delayMillis: number) {
     }

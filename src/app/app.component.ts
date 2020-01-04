@@ -19,6 +19,11 @@ export class AppComponent implements OnInit {
                 routerLink: 'play',
             },
             {
+                label: 'Testing',
+                icon: 'pi pi-fw pi-fast-forward',
+                routerLink: 'testing',
+            },
+            {
                 label: 'Info',
                 icon: 'pi pi-fw pi-info',
                 routerLink: 'information',

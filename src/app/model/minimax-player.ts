@@ -18,12 +18,16 @@ export class MinimaxPlayer implements Player {
         0: 'DRAW',
     };
 
-    public static factory: PlayerFactory = {
-        name: 'Robot-Minimax',
-        createPlayer: (game: Game, playerColor: PlayerColor, delayMillis = 300) => {
-            return new MinimaxPlayer(game, playerColor, delayMillis);
-        }
-    };
+    public static factory: PlayerFactory = MinimaxPlayer.createFactory(300);
+
+    public static createFactory(delayMillis: number): PlayerFactory {
+        return {
+            name: 'Robot-Minimax',
+            createPlayer: (game: Game, playerColor: PlayerColor) => {
+                return new MinimaxPlayer(game, playerColor, delayMillis);
+            }
+        };
+    }
 
     constructor(private game: Game, public playerColor: PlayerColor, private delayMillis: number) {
     }

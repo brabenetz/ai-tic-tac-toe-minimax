@@ -1,0 +1,26 @@
+<div class="testing">
+    <p>
+        <label for="testRuns">Test Runs: </label>
+        <p-spinner [(ngModel)]="testRuns" inputId="testRuns" [min]="0" [max]="10000" [step]="10"
+            [disabled]="testingIsRunning"></p-spinner>
+        <br>
+        <label for="player1">Player 1: </label>
+        <p-dropdown [options]="availablePlayers" [(ngModel)]="player1" inputId="player1" [disabled]="testingIsRunning"
+            [optionLabel]="'name'"></p-dropdown>
+        <br>
+        <label for="player2">Player 2: </label>
+        <p-dropdown [options]="availablePlayers" [(ngModel)]="player2" inputId="player2" [disabled]="testingIsRunning"
+            [optionLabel]="'name'"></p-dropdown>
+    </p>
+    <p>
+        <ng-container *ngIf="!testingIsRunning">
+            <button pButton type="button" label="Start" (click)="startTesting()"></button>
+        </ng-container>
+        <ng-container *ngIf="testingIsRunning">
+            <button pButton type="button" label="Stop" (click)="stopTesting()"></button>
+        </ng-container>
+    </p>
+    <p>
+        {{currentRunInfo}}
+    </p>
+</div>

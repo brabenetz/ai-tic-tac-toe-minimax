@@ -56,6 +56,7 @@ export class PlayComponent implements OnInit {
         const player1 = this.player1.createPlayer(game, PlayerColor.RED);
         const player2 = this.player2.createPlayer(game, PlayerColor.GREEN);
         this.playGround = new PlayGround(game, player1, player2);
+        this.playGround.startGame();
         this.gameIsRunning = true;
     }
 

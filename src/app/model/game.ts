@@ -10,6 +10,8 @@ export interface Game {
     nextPlayerColor: PlayerColor;
     playGround: PlayerColor[][];
     playGroundSubject: BehaviorSubject<Game>;
+    movesSuccessful: number;
+    movesOverall: number;
     move(playerColor: PlayerColor, col: number, row: number): boolean;
     revertMove(playerColor: PlayerColor, col: number, row: number): boolean;
     isGameFinished(): boolean;
