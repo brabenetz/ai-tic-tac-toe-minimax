@@ -58,8 +58,11 @@ export class TestingComponent implements OnInit {
             this.storedData, 'TestRun - Minimax without DRAW adjustment',
             { redWins: 0, greenWins: 811, draws: 189, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7000 });
         TestingChartBarUtils.addChartBarDataSet(
-            this.storedData, 'TestRun - Minimax Perfect',
+            this.storedData, 'TestRun - Minimax Perfect GREEN',
             { redWins: 0, greenWins: 918, draws: 82, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 6000 });
+        TestingChartBarUtils.addChartBarDataSet(
+            this.storedData, 'TestRun - Minimax Perfect RED',
+            { redWins: 995, greenWins: 0, draws: 5, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 5344 });
 
         this.storedOptions = TestingChartBarUtils.createChartBarOptions('Stored Test-Runs');
         this.storedOptions.onClick = (mouseEvent, selectedDataSets) => {
