@@ -2,6 +2,7 @@ import { Player } from './player';
 import { Game } from './game';
 import { PlayerColor, PlayerColorUtil } from './player-color';
 import { PlayerFactory } from './player-factory';
+import * as NodeCache from 'node-cache';
 import * as _ from 'lodash';
 
 interface MinimaxResult {
@@ -18,6 +19,7 @@ export class MinimaxPlayer implements Player {
         0: 'DRAW',
     };
 
+    private static myCache = new NodeCache();
     public static factory: PlayerFactory = MinimaxPlayer.createFactory(300);
 
     public static createFactory(delayMillis: number): PlayerFactory {
@@ -33,6 +35,12 @@ export class MinimaxPlayer implements Player {
     }
 
     static minimax(game: Game, playerColor: PlayerColor, depth = 0): MinimaxResult {
+        const cacheKey = game.playGround.toString();
+        const cachedResult: MinimaxResult = this.myCache.get(cacheKey);
+        if (cachedResult !== undefined) {
+            return cachedResult;
+        }
+
         const currentPlayerColor = game.nextPlayerColor;
         const isMaximizing = playerColor === currentPlayerColor;
         const result: MinimaxResult = {
@@ -41,6 +49,7 @@ export class MinimaxPlayer implements Player {
             bestScore: isMaximizing ? -Infinity : Infinity
         };
         if (game.isGameFinished()) {
+            this.myCache.set(cacheKey, result);
             return result;
         }
 
@@ -94,6 +103,7 @@ export class MinimaxPlayer implements Player {
         }
         result.bestScore = _.round(result.bestScore, 5);
 
+        this.myCache.set(cacheKey, result);
         return result;
     }
 
