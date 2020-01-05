@@ -52,17 +52,20 @@ export class TestingComponent implements OnInit {
 
         this.storedData = TestingChartBarUtils.createInitialChartBarData();
         TestingChartBarUtils.addChartBarDataSet(
-            this.storedData, 'TestRun - Random against Random',
-            { redWins: 580, greenWins: 280, draws: 140, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 8000 });
+            this.storedData, 'Random vs Random',
+            { redWins: 580, greenWins: 280, draws: 140, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7604 });
         TestingChartBarUtils.addChartBarDataSet(
-            this.storedData, 'TestRun - Minimax without DRAW adjustment',
+            this.storedData, ['Minimax vs Random', '(without DRAW adjustment)'],
             { redWins: 0, greenWins: 811, draws: 189, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7000 });
         TestingChartBarUtils.addChartBarDataSet(
-            this.storedData, 'TestRun - Minimax Perfect GREEN',
+            this.storedData, 'Random vs Minimax',
             { redWins: 0, greenWins: 918, draws: 82, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 6000 });
         TestingChartBarUtils.addChartBarDataSet(
-            this.storedData, 'TestRun - Minimax Perfect RED',
+            this.storedData, 'Minimax vs Random',
             { redWins: 995, greenWins: 0, draws: 5, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 5344 });
+        TestingChartBarUtils.addChartBarDataSet(
+            this.storedData, 'Minimax vs Minimax',
+            { redWins: 0, greenWins: 0, draws: 1000, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 9000 });
 
         this.storedOptions = TestingChartBarUtils.createChartBarOptions('Stored Test-Runs');
         this.storedOptions.onClick = (mouseEvent, selectedDataSets) => {

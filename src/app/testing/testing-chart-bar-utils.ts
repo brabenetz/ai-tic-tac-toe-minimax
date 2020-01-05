@@ -9,7 +9,8 @@ export class TestingChartBarUtils {
         AVG_SUCCESS_MOVES: 3,
         AVG_FAILED_MOVES: 4,
 
-    }
+    };
+
     public static createInitialChartBarData() {
         return {
             labels: [],
@@ -66,17 +67,29 @@ export class TestingChartBarUtils {
             scales: {
                 xAxes: [
                     {
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Scenarios'
+                        },
                         stacked: true
                     },
                 ],
                 yAxes: [
                     {
                         id: 'y-axis-Wins',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Wins'
+                        },
                         position: 'left',
                         stacked: true,
                     },
                     {
                         id: 'y-axis-Moves',
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Moves'
+                        },
                         position: 'right',
                         stacked: true,
                         ticks: {
@@ -88,13 +101,13 @@ export class TestingChartBarUtils {
         };
     }
     public static addChartBarDataSet(
-        data: any, label: string,
+        data: any, label: string | string[],
         statisticSummary: StatisticSummary) {
 
         this.updateChartBarDataSet(data, label, data.datasets[0].data.length, statisticSummary);
     }
     public static updateChartBarDataSet(
-        data: any, label: string, index: number,
+        data: any, label: string | string[], index: number,
         statisticSummary: StatisticSummary) {
 
         if (label) {
