@@ -58,7 +58,7 @@ export class MinimaxPlayer implements Player {
         playGround.forEach((column, col) => {
             column.forEach((cell, row) => {
                 if (cell === PlayerColor.FREE) {
-                    // make move without TRAKING history (is al ittle bit faster)
+                    // make move without TRAKING history (is a little bit faster)
                     game.nextPlayerColor = PlayerColorUtil.opposite(currentPlayerColor);
                     game.playGround[col][row] = currentPlayerColor;
                     // if (!game.move(currentPlayerColor, col, row)) {
