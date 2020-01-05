@@ -8,6 +8,8 @@ import { TicTacToeGame } from '../model/tic-tac-toe-game';
 import { PlayerColor } from '../model/player-color';
 import { TestingChartBarUtils } from './testing-chart-bar-utils';
 import * as _ from 'lodash';
+import { identifierModuleUrl } from '@angular/compiler';
+import { timeout } from 'q';
 
 @Component({
     selector: 'app-testing',
@@ -76,7 +78,8 @@ export class TestingComponent implements OnInit {
         this.testResultData = TestingChartBarUtils.createInitialChartBarData();
 
         const summary = new StatisticSummary();
-
+        const updateIntervalMilis = 10_000;
+        let nextGraphUpdate = new Date().getTime() + updateIntervalMilis;
         for (let run = 0; run < this.testRuns && this.testingIsRunning; run++) {
 
             this.currentRunInfo = `${run + 1}/${this.testRuns}`;
@@ -95,10 +98,15 @@ export class TestingComponent implements OnInit {
             summary.countSuccessMoves += playGround.game.movesSuccessful;
             summary.countFailedMoves += playGround.game.movesOverall - playGround.game.movesSuccessful;
 
-            // TestingChartBarUtils.updateChartBarDataSet(this.testResultData, null, 0, summary);
-            // this.testResultData = {...this.testResultData}; // trigger chart update
+            if (new Date().getTime() > nextGraphUpdate) {
+                // console.log('Chart Update');
+
+                TestingChartBarUtils.updateChartBarDataSet(this.testResultData, null, 0, summary);
+                this.testResultData = {...this.testResultData}; // trigger chart update
+                nextGraphUpdate = new Date().getTime() + updateIntervalMilis;
+            }
         }
-        TestingChartBarUtils.addChartBarDataSet(this.testResultData, null, summary);
+        TestingChartBarUtils.updateChartBarDataSet(this.testResultData, null, 0, summary);
         this.testResultData = {...this.testResultData}; // trigger chart update
         this.testingIsRunning = false;
 

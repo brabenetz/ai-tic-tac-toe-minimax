@@ -74,9 +74,6 @@ export class TestingChartBarUtils {
                         id: 'y-axis-Wins',
                         position: 'left',
                         stacked: true,
-                        ticks: {
-                            max: 10,
-                        }
                     },
                     {
                         id: 'y-axis-Moves',
