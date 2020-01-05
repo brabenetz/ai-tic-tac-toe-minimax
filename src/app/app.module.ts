@@ -5,6 +5,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SpinnerModule } from 'primeng/spinner';
+import {ChartModule} from 'primeng/chart';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -33,6 +34,7 @@ import { TestingComponent } from './testing/testing.component';
         ButtonModule,
         CheckboxModule,
         SpinnerModule,
+        ChartModule,
     ],
     providers: [],
     bootstrap: [AppComponent]
