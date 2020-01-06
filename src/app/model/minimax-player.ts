@@ -10,6 +10,10 @@ interface MinimaxResult {
     bestPosition: { col: number, row: number };
     bestScore: number;
 }
+interface MinimaxOptions {
+    withDepthAdjustment: boolean;
+    withDrawAdjustment: boolean;
+}
 
 /** Minimax is explaned in 'Coding Challenge 154': https://youtu.be/trKjYdBASyQ from the https://thecodingtrain.com  */
 export class MinimaxPlayer implements Player {
@@ -20,22 +24,30 @@ export class MinimaxPlayer implements Player {
     };
 
     private static myCache = new NodeCache();
-    public static factory: PlayerFactory = MinimaxPlayer.createFactory(300);
+    public static factory: PlayerFactory = MinimaxPlayer.createFactory(
+        'Robot-Minimax', 300, { withDepthAdjustment: true, withDrawAdjustment: true });
 
-    public static createFactory(delayMillis: number): PlayerFactory {
+    public static createFactory(name: string, delayMillis: number, minimaxOptions: MinimaxOptions): PlayerFactory {
         return {
-            name: 'Robot-Minimax',
+            name,
             createPlayer: (game: Game, playerColor: PlayerColor) => {
-                return new MinimaxPlayer(game, playerColor, delayMillis);
+                return new MinimaxPlayer(game, playerColor, delayMillis, minimaxOptions);
             }
         };
     }
 
-    constructor(private game: Game, public playerColor: PlayerColor, private delayMillis: number) {
+    constructor(private game: Game, public playerColor: PlayerColor, private delayMillis: number, private minimaxOptions: MinimaxOptions) {
     }
 
-    static minimax(game: Game, playerColor: PlayerColor, depth = 0): MinimaxResult {
-        const cacheKey = game.playGround.toString();
+    static minimax(
+        game: Game, playerColor: PlayerColor,
+        depth = 0, minimaxOptions = { withDepthAdjustment: true, withDrawAdjustment: true }): MinimaxResult {
+
+        const cacheKey = [
+            PlayerColor[playerColor],
+            ...game.playGround,
+            minimaxOptions.withDepthAdjustment, minimaxOptions.withDrawAdjustment
+        ].toString();
         const cachedResult: MinimaxResult = this.myCache.get(cacheKey);
         if (cachedResult !== undefined) {
             return cachedResult;
@@ -66,7 +78,7 @@ export class MinimaxPlayer implements Player {
                     //     throw new Error(`move for player ${PlayerColor[currentPlayerColor]} to ${col}/${row} was not success.`);
                     // }
 
-                    const score = MinimaxPlayer.getScore(game, playerColor, depth);
+                    const score = MinimaxPlayer.getScore(game, playerColor, depth, minimaxOptions);
 
                     result.scores[col][row] = score;
                     if (isMaximizing && score > result.bestScore) {
@@ -88,20 +100,22 @@ export class MinimaxPlayer implements Player {
             });
         });
 
-        // small correction if prediction is DRAW, adjust it by count the possible wins or loses of all scores
-        // In other words: hoping the opponent makes NOT the best move.
-        if (Math.round(result.bestScore) === 0) {
-            // small correction: prefer moves with higher chance to win and lower chance to loss:
-            _.flatten(result.scores).forEach((prediction) => {
-                if (prediction !== undefined) {
-                    if (!isMaximizing) {
-                        // only count opposite possibilities to lose, because minimax itself will always do the best move.
-                        result.bestScore += (Math.round(prediction) * 0.001);
+        if (minimaxOptions.withDrawAdjustment) {
+            // small correction if prediction is DRAW, adjust it by count the possible wins or loses of all scores
+            // In other words: hoping the opponent makes NOT the best move.
+            if (Math.round(result.bestScore) === 0) {
+                // small correction: prefer moves with higher chance to win and lower chance to loss:
+                _.flatten(result.scores).forEach((prediction) => {
+                    if (prediction !== undefined) {
+                        if (!isMaximizing) {
+                            // only count opposite possibilities to lose, because minimax itself will always do the best move.
+                            result.bestScore += (Math.round(prediction) * 0.001);
+                        }
                     }
-                }
-            });
+                });
+            }
+            result.bestScore = _.round(result.bestScore, 5);
         }
-        result.bestScore = _.round(result.bestScore, 5);
 
         this.myCache.set(cacheKey, result);
         return result;
@@ -111,10 +125,13 @@ export class MinimaxPlayer implements Player {
         return this.scorToNameMap[Math.round(score)];
     }
 
-    static getScore(game: Game, playerColor: PlayerColor, depth: number): number {
+    static getScore(game: Game, playerColor: PlayerColor, depth: number, minimaxOptions: MinimaxOptions): number {
         if (game.isGameFinished()) {
             // depthCorrection: prefer shorter games: win faster or loss slower
-            const depthCorrection = .4 - (0.001 * depth);
+            let depthCorrection = 0;
+            if (minimaxOptions.withDepthAdjustment) {
+                depthCorrection = .4 - (0.001 * depth);
+            }
             const winner = game.findWinner();
 
             if (winner === playerColor) {
@@ -126,13 +143,13 @@ export class MinimaxPlayer implements Player {
                 return 0;
             }
         } else {
-            return MinimaxPlayer.minimax(game, playerColor, depth + 1).bestScore;
+            return MinimaxPlayer.minimax(game, playerColor, depth + 1, minimaxOptions).bestScore;
         }
     }
 
     async move(): Promise<void> {
         // get free Cells for possible moves
-        const minimax: MinimaxResult = MinimaxPlayer.minimax(this.game.copy(), this.playerColor, 0);
+        const minimax: MinimaxResult = MinimaxPlayer.minimax(this.game.copy(), this.playerColor, 0, this.minimaxOptions);
 
         // apply small delay for nicer play-animations.
         return new Promise((resolve) => {

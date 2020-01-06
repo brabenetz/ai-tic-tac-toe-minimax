@@ -3,9 +3,10 @@ import { TicTacToeGame } from './tic-tac-toe-game';
 import { PlayerColor } from './player-color';
 
 describe('MinimaxPlayer', () => {
+    const DEFAULT_MINIMAX_OPTIONS = { withDepthAdjustment: true, withDrawAdjustment: true };
     it('should create an instance', () => {
         const game = new TicTacToeGame();
-        expect(new MinimaxPlayer(game, PlayerColor.RED, 0)).toBeTruthy();
+        expect(new MinimaxPlayer(game, PlayerColor.RED, 0, DEFAULT_MINIMAX_OPTIONS)).toBeTruthy();
     });
     describe('gameplay', () => {
         it('returns only available solution with right score for win', async () => {
@@ -24,7 +25,7 @@ describe('MinimaxPlayer', () => {
             game.move(PlayerColor.GREEN, 0, 1);
 
             // console.log('PlayerGround', game.playGround);
-            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
+            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED, 0, DEFAULT_MINIMAX_OPTIONS);
 
             expect(result.bestScore).toBeCloseTo(1.4, 1);
             expect(result.bestPosition).toEqual({ col: 2, row: 1 });
@@ -45,7 +46,7 @@ describe('MinimaxPlayer', () => {
             game.move(PlayerColor.GREEN, 2, 1);
 
             // console.log('PlayerGround', game.playGround);
-            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
+            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED, 0, DEFAULT_MINIMAX_OPTIONS);
 
             expect(result.bestScore).toBeCloseTo(0, 1);
             expect(result.bestPosition).toEqual({ col: 0, row: 1 });
@@ -64,7 +65,7 @@ describe('MinimaxPlayer', () => {
             game.move(PlayerColor.GREEN, 0, 2);
             game.move(PlayerColor.RED, 2, 0);
 
-            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.GREEN);
+            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.GREEN, 0, DEFAULT_MINIMAX_OPTIONS);
 
             // console.log('result', result);
             expect(result.bestScore).toBeCloseTo(0, 1);
@@ -75,7 +76,7 @@ describe('MinimaxPlayer', () => {
             const game = new TicTacToeGame();
             game.move(PlayerColor.RED, 0, 0);
 
-            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.GREEN);
+            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.GREEN, 0, DEFAULT_MINIMAX_OPTIONS);
 
             // console.log('result', result);
             expect(result.bestScore).toBeCloseTo(0, 1);
@@ -96,7 +97,7 @@ describe('MinimaxPlayer', () => {
             // game.playGround.forEach(line => {
             //     console.log('\t\t\t' + line);
             // });
-            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
+            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED, 0, DEFAULT_MINIMAX_OPTIONS);
 
             // console.log('result', result);
             expect(result.bestScore).toBeCloseTo(1.4, 1);
@@ -117,7 +118,7 @@ describe('MinimaxPlayer', () => {
             // game.playGround.forEach(line => {
             //     console.log('\t\t\t' + line);
             // });
-            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
+            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED, 0, DEFAULT_MINIMAX_OPTIONS);
 
             // console.log('result', result);
             expect(result.bestScore).toBeCloseTo(1.4, 1);
@@ -131,7 +132,7 @@ describe('MinimaxPlayer', () => {
             // game.playGround.forEach(line => {
             //     console.log('\t\t\t' + line);
             // });
-            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED);
+            const result = MinimaxPlayer.minimax(game.copy(), PlayerColor.RED, 0, DEFAULT_MINIMAX_OPTIONS);
 
             // console.log('result', result);
             expect(result.bestScore).toBeCloseTo(0, 1);

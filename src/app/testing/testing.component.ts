@@ -20,9 +20,8 @@ export class TestingComponent implements OnInit {
 
     public availablePlayers: PlayerFactory[];
 
-    public testRuns = 10;
+    public testRuns = 100;
 
-    // public currentRun = 0;
     public currentRunInfo = '';
 
     public player1: PlayerFactory;
@@ -44,9 +43,16 @@ export class TestingComponent implements OnInit {
     ngOnInit() {
         this.availablePlayers = [];
         this.availablePlayers.push(RandomPlayer.createFactory(0));
-        this.availablePlayers.push(MinimaxPlayer.createFactory(0));
+        this.availablePlayers.push(MinimaxPlayer.createFactory(
+            'Robot-Minimax core-logic', 0, { withDepthAdjustment: false, withDrawAdjustment: false }));
+        this.availablePlayers.push(MinimaxPlayer.createFactory(
+            'Robot-Minimax with depth Adjustment ', 0, { withDepthAdjustment: true, withDrawAdjustment: false }));
+        this.availablePlayers.push(MinimaxPlayer.createFactory(
+            'Robot-Minimax with DRAW Adjustment', 0, { withDepthAdjustment: false, withDrawAdjustment: true }));
+        this.availablePlayers.push(MinimaxPlayer.createFactory(
+            'Robot-Minimax Perfect', 0, { withDepthAdjustment: true, withDrawAdjustment: true }));
         this.player1 = this.availablePlayers[0];
-        this.player2 = this.availablePlayers[1];
+        this.player2 = this.availablePlayers[4];
 
         this.testResultOptions = TestingChartBarUtils.createChartBarOptions('Last Test-Run');
 
@@ -55,13 +61,19 @@ export class TestingComponent implements OnInit {
             this.storedData, 'Random vs Random',
             { redWins: 580, greenWins: 280, draws: 140, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7604 });
         TestingChartBarUtils.addChartBarDataSet(
-            this.storedData, ['Minimax vs Random', '(without DRAW adjustment)'],
-            { redWins: 0, greenWins: 811, draws: 189, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7000 });
+            this.storedData, ['Random vs Minimax', '(core-logic)'],
+            { redWins: 0, greenWins: 778, draws: 222, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7380 });
+        TestingChartBarUtils.addChartBarDataSet(
+            this.storedData, ['Random vs Minimax', '(with depth Adjustment)'],
+            { redWins: 0, greenWins: 803, draws: 197, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7031 });
+        TestingChartBarUtils.addChartBarDataSet(
+            this.storedData, ['Random vs Minimax', '(with DRAW Adjustment)'],
+            { redWins: 0, greenWins: 922, draws: 78, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7078 });
         TestingChartBarUtils.addChartBarDataSet(
             this.storedData, 'Random vs Minimax',
-            { redWins: 0, greenWins: 918, draws: 82, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 6000 });
+            { redWins: 0, greenWins: 918, draws: 82, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 6455 });
         TestingChartBarUtils.addChartBarDataSet(
-            this.storedData, 'Minimax vs Random',
+            this.storedData, ['Minimax vs Random', '(Minimax first)'],
             { redWins: 995, greenWins: 0, draws: 5, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 5344 });
         TestingChartBarUtils.addChartBarDataSet(
             this.storedData, 'Minimax vs Minimax',
@@ -108,12 +120,14 @@ export class TestingComponent implements OnInit {
                 // console.log('Chart Update');
 
                 TestingChartBarUtils.updateChartBarDataSet(this.testResultData, null, 0, summary);
-                this.testResultData = {...this.testResultData}; // trigger chart update
+                this.testResultData = { ...this.testResultData }; // trigger chart update
                 nextGraphUpdate = new Date().getTime() + updateIntervalMilis;
             }
         }
+        console.log('summary', JSON.stringify(summary));
+
         TestingChartBarUtils.updateChartBarDataSet(this.testResultData, null, 0, summary);
-        this.testResultData = {...this.testResultData}; // trigger chart update
+        this.testResultData = { ...this.testResultData }; // trigger chart update
         this.testingIsRunning = false;
 
     }
