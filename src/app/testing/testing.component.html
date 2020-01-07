@@ -1,28 +1,53 @@
-<div class="testing">
-    <p>
-        <label for="testRuns">Test Runs: </label>
-        <p-spinner [(ngModel)]="testRuns" inputId="testRuns" [min]="0" [max]="10000" [step]="10"
-            [disabled]="testingIsRunning"></p-spinner>
-        <br>
-        <label for="player1">Player 1: </label>
-        <p-dropdown [options]="availablePlayers" [(ngModel)]="player1" inputId="player1" [disabled]="testingIsRunning"
-            [optionLabel]="'name'"></p-dropdown>
-        <br>
-        <label for="player2">Player 2: </label>
-        <p-dropdown [options]="availablePlayers" [(ngModel)]="player2" inputId="player2" [disabled]="testingIsRunning"
-            [optionLabel]="'name'"></p-dropdown>
-    </p>
-    <p>
-        <ng-container *ngIf="!testingIsRunning">
-            <button pButton type="button" label="Start" (click)="startTesting()"></button>
-        </ng-container>
-        <ng-container *ngIf="testingIsRunning">
-            <button pButton type="button" label="Stop" (click)="stopTesting()"></button>
-        </ng-container>
-    </p>
-    <p>
-        {{currentRunInfo}}
-    </p>
-    <p-chart type="bar" [data]="testResultData" [options]="testResultOptions"></p-chart>
-    <p-chart type="bar" [data]="storedData" [options]="storedOptions"></p-chart>
+<div class="testing p-grid">
+    <div class="input p-col-12 p-md-6">
+        <div class="p-grid ui-fluid">
+            <div class="p-col-3">
+                <label for="testRuns">Test Runs: </label>
+            </div>
+            <div class="p-col-9">
+                <p-spinner [(ngModel)]="testRuns" inputId="testRuns" [min]="0" [max]="10000" [step]="10"
+                    [disabled]="testingIsRunning" ngClass="input"></p-spinner>
+            </div>
+
+
+            <div class="p-col-3">
+                <label for="player1">Player 1: </label>
+            </div>
+            <div class="p-col-9">
+                <p-dropdown [options]="availablePlayers" [(ngModel)]="player1" inputId="player1"
+                    [disabled]="testingIsRunning" [optionLabel]="'name'"></p-dropdown>
+            </div>
+
+
+            <div class="p-col-3">
+                <label for="player2">Player 2: </label>
+            </div>
+            <div class="p-col-9">
+                <p-dropdown [options]="availablePlayers" [(ngModel)]="player2" inputId="player2"
+                    [disabled]="testingIsRunning" [optionLabel]="'name'"></p-dropdown>
+            </div>
+        </div>
+        <div class="p-grid">
+            <div class="p-col-12">
+
+                <ng-container *ngIf="!testingIsRunning">
+                    <button pButton type="button" label="Start" (click)="startTesting()"></button>
+                </ng-container>
+                <ng-container *ngIf="testingIsRunning">
+                    <button pButton type="button" label="Stop" (click)="stopTesting()"></button>
+                </ng-container>
+            </div>
+        </div>
+        <div class="p-grid">
+            <div class="p-col-12">
+                {{currentRunInfo}}
+            </div>
+        </div>
+    </div>
+    <div class="p-col-12 p-md-6">
+        <p-chart type="bar" [data]="testResultData" [options]="testResultOptions"></p-chart>
+    </div>
+    <div class="p-col-12">
+        <p-chart type="bar" [data]="storedData" [options]="storedOptions"></p-chart>
+    </div>
 </div>

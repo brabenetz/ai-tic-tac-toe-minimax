@@ -114,8 +114,8 @@ export class MinimaxPlayer implements Player {
                     }
                 });
             }
-            result.bestScore = _.round(result.bestScore, 5);
         }
+        result.bestScore = _.round(result.bestScore, 5);
 
         this.myCache.set(cacheKey, result);
         return result;

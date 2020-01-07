@@ -62,10 +62,10 @@ export class TestingComponent implements OnInit {
             { redWins: 580, greenWins: 280, draws: 140, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7604 });
         TestingChartBarUtils.addChartBarDataSet(
             this.storedData, ['Random vs Minimax', '(core-logic)'],
-            { redWins: 0, greenWins: 778, draws: 222, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7380 });
+            { redWins: 0, greenWins: 783, draws: 217, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7395 });
         TestingChartBarUtils.addChartBarDataSet(
             this.storedData, ['Random vs Minimax', '(with depth Adjustment)'],
-            { redWins: 0, greenWins: 803, draws: 197, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7031 });
+            { redWins: 0, greenWins: 796, draws: 204, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7040 });
         TestingChartBarUtils.addChartBarDataSet(
             this.storedData, ['Random vs Minimax', '(with DRAW Adjustment)'],
             { redWins: 0, greenWins: 922, draws: 78, countGames: 1000, countFailedMoves: 0, countSuccessMoves: 7078 });
@@ -84,6 +84,11 @@ export class TestingComponent implements OnInit {
             // TODO: Implement 'REMOVE', 'Edit Label'
             console.log('selectedDataSets', selectedDataSets);
         };
+        this.storedOptions.scales.xAxes[0].scaleLabel = {
+            display: true,
+            labelString: 'Scenarios'
+        };
+        
     }
 
     stopTesting(): void {

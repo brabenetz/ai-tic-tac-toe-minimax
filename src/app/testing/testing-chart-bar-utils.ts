@@ -67,11 +67,7 @@ export class TestingChartBarUtils {
             scales: {
                 xAxes: [
                     {
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Scenarios'
-                        },
-                        stacked: true
+                        stacked: true,
                     },
                 ],
                 yAxes: [
