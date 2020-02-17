@@ -1,5 +1,7 @@
 # Ai-TicTacToe-Minimax
 
+![learning tic-tac-toe minimax logo](./img/learning-tic-tac-toe-minimax.png)
+
 Artificial-Intelligence learning-project for tic-tac-toe with simple minimax algorithm
 
 A detailed explanation about the minimax algorithm can be found on [thecodingtrain.com](https://thecodingtrain.com/) the [Coding Challenge 154](https://youtu.be/trKjYdBASyQ). 
