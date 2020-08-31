@@ -2,11 +2,11 @@
     <p>
         <label for="player1">Player 1: </label>
         <p-dropdown [options]="availablePlayers" [(ngModel)]="player1" inputId="player1" [disabled]="gameIsRunning"
-            [optionLabel]="'name'"></p-dropdown>
+            optionLabel="name"></p-dropdown>
         <br>
         <label for="player2">Player 2: </label>
         <p-dropdown [options]="availablePlayers" [(ngModel)]="player2" inputId="player2" [disabled]="gameIsRunning"
-            [optionLabel]="'name'"></p-dropdown>
+            optionLabel="name"></p-dropdown>
         <br>
         <p-checkbox  label="show Minimax Prediction" [(ngModel)]="showMinimaxPrediction" inputId="showMinimaxPrediction" binary="true"></p-checkbox>
     </p>
