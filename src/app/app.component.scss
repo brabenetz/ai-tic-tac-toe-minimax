@@ -1,11 +1,31 @@
 :host ::ng-deep {
-    p-menubar {
-        .ui-menubar {
-            background-color: #dfd;
-            .ui-menuitem, .ui-menuitem.ui-menuitem-active {
-                .menubar-information {
-                    .ui-menuitem-icon,
-                    .ui-menuitem-text {
+    .p-menubar {
+        background-color: #dfd;
+
+        .p-menubar-root-list {
+
+            .p-menuitem.p-menuitem-active {
+                .p-menuitem-link:not(.p-disabled):hover {
+                    background-color: #9f9;
+                }
+                .p-menuitem-link:not(.p-disabled) {
+                    background-color: unset;
+                }
+            }
+
+            .p-menuitem {
+                .p-menuitem-link:not(.p-disabled):hover {
+                    background-color: #9f9;
+                }
+                .p-menuitem-link:not(.p-disabled) {
+                    background-color: unset;
+                }
+
+                .menubar-information.p-menuitem-link,
+                .menubar-information.p-menuitem-link:not(.p-disabled):hover {
+
+                    .p-menuitem-icon,
+                    .p-menuitem-text {
                         color: blue;
                     }
                 }
@@ -13,3 +33,10 @@
         }
     }
 }
+
+// .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:not(.p-disabled):hover
+
+//  .p-menubar .p-menubar-root-list .p-menuitem .menubar-information.p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon
+
+// .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link,
+// .p-menubar .p-menubar-root-list > .p-menuitem.p-menuitem-active > .p-menuitem-link:not(.p-disabled):hover
