@@ -27,7 +27,7 @@ export class MinimaxPlayer implements Player {
     public static factory: PlayerFactory = MinimaxPlayer.createFactory(
         'Robot-Minimax', 300, { withDepthAdjustment: true, withDrawAdjustment: true });
 
-    public static createFactory(name: string, delayMillis: number, minimaxOptions: MinimaxOptions): PlayerFactory {
+    public static createFactory(name: string, delayMillis: number, minimaxOptions?: MinimaxOptions): PlayerFactory {
         return {
             name,
             createPlayer: (game: Game, playerColor: PlayerColor) => {
@@ -45,6 +45,7 @@ export class MinimaxPlayer implements Player {
 
         const cacheKey = [
             PlayerColor[playerColor],
+            PlayerColor[game.nextPlayerColor],
             ...game.playGround,
             minimaxOptions.withDepthAdjustment, minimaxOptions.withDrawAdjustment
         ].toString();
