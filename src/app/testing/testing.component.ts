@@ -88,7 +88,7 @@ export class TestingComponent implements OnInit {
             display: true,
             labelString: 'Scenarios'
         };
-        
+
     }
 
     stopTesting(): void {

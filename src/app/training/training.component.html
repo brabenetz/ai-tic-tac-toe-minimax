@@ -1,0 +1,40 @@
+<h2>1. generate games</h2>
+<p>This will generate multiple games between MinMax-Player (perfect moves) and Random-Player (get most branches).</p>
+<p>
+    <p-spinner [(ngModel)]="gamesToGenerate" inputId="gamesToGenerate" [min]="0" [max]="1000" [step]="10"
+        [disabled]="gamesAreGenerating" ngClass="input"></p-spinner>
+    Games
+</p>
+<p *ngIf="gamesAreGenerating">{{gamesGenerationInfo}}</p>
+<p>
+
+    <ng-container *ngIf="!gamesAreGenerating">
+        <button pButton type="button" label="Generate" (click)="generateGames()"></button>
+    </ng-container>
+    <ng-container *ngIf="gamesAreGenerating">
+        <button pButton type="button" label="Stop Generating" (click)="stopGenerateGames()"></button>
+    </ng-container>
+</p>
+<p *ngIf="!gamesAreGenerating && games?.length > 0">{{games.length}} Games prepared.</p>
+
+<h2>3. collect trainings and testing data</h2>
+
+<p>Collect all moves of the minimax-player and use it as training and testing data.</p>
+<p>
+    <p-inputNumber [(ngModel)]="trainingVsTestingRatio" inputId="trainingVsTestingRatio" suffix="%" prefix="~" ></p-inputNumber>
+</p>
+<p>
+    <button pButton type="button" label="Collect Trainings Data" (click)="collectTrainingsData()"></button>
+</p>
+<ul *ngIf="trainingInput && testingInput">
+    <li>{{trainingInput.length}} Training Sets</li>
+    <li>{{testingInput.length}} Testing Sets</li>
+</ul>
+
+<h2>2. train neural net</h2>
+<p *ngIf="!visor.isOpen()">
+    <button pButton type="button" label="Open Tensorflow Visor" (click)="visor.open()"></button>
+</p>
+<p>
+    <button pButton type="button" label="Start training" (click)="startTraining()"></button>
+</p>

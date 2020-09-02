@@ -19,6 +19,12 @@ export class AppComponent implements OnInit {
                 routerLink: 'play',
             },
             {
+                label: 'Training',
+                icon: 'pi pi-fw pi-share-alt', // the share symbol looks like a very small neuronal net.
+                // icon: 'pi pi-fw pi-sliders-h', // slider horizontal if there are diffent settings to train
+                routerLink: 'training',
+            },
+            {
                 label: 'Testing',
                 icon: 'pi pi-fw pi-fast-forward',
                 routerLink: 'testing',

@@ -3,7 +3,7 @@ import { PlayerFactory } from '../model/player-factory';
 import { HumanPlayer } from '../model/human-player';
 import { PlayGround } from '../model/play-ground';
 import { TicTacToeGame } from '../model/tic-tac-toe-game';
-import { PlayerColor } from '../model/player-color';
+import { PlayerColor, PlayerColorUtil } from '../model/player-color';
 import { RandomPlayer } from '../model/random-player';
 import * as _ from 'lodash';
 import { MinimaxPlayer } from '../model/minimax-player';
@@ -40,7 +40,7 @@ export class PlayComponent implements OnInit {
         this.availablePlayers = [];
         this.availablePlayers.push(HumanPlayer.factory);
         this.availablePlayers.push(RandomPlayer.factory);
-        this.availablePlayers.push(MinimaxPlayer.factory);
+        this.availablePlayers.push(MinimaxPlayer.createFactory('Robot-Minimax', 5000));
     }
     restartGame(): void {
         this.stopGame();
@@ -52,9 +52,11 @@ export class PlayComponent implements OnInit {
     }
 
     startGame(): void {
+        const redStart = (Math.random() >= 0.5);
         const game = new TicTacToeGame();
-        const player1 = this.player1.createPlayer(game, PlayerColor.RED);
-        const player2 = this.player2.createPlayer(game, PlayerColor.GREEN);
+        game.nextPlayerColor = redStart ? PlayerColor.RED : PlayerColor.GREEN;
+        const player1 = this.player1.createPlayer(game, game.nextPlayerColor);
+        const player2 = this.player2.createPlayer(game, PlayerColorUtil.opposite(game.nextPlayerColor));
         this.playGround = new PlayGround(game, player1, player2);
         this.playGround.startGame();
         this.gameIsRunning = true;

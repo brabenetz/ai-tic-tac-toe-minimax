@@ -5,6 +5,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SpinnerModule } from 'primeng/spinner';
+import { InputNumberModule } from 'primeng/inputnumber';
 import {ChartModule} from 'primeng/chart';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +17,7 @@ import { PlayGroundComponent } from './play-ground/play-ground.component';
 import { InformationComponent } from './information/information.component';
 import { TestingComponent } from './testing/testing.component';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { TrainingComponent } from './training/training.component';
 
 @NgModule({
     declarations: [
@@ -24,6 +26,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
         PlayGroundComponent,
         InformationComponent,
         TestingComponent,
+        TrainingComponent,
     ],
     imports: [
         FormsModule,
@@ -35,6 +38,7 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
         ButtonModule,
         CheckboxModule,
         SpinnerModule,
+        InputNumberModule,
         ChartModule,
     ],
     providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
