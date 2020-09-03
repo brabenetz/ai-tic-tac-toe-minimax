@@ -11,6 +11,7 @@ import * as _ from 'lodash';
 import * as tfvis from '@tensorflow/tfjs-vis';
 import * as tf from '@tensorflow/tfjs';
 import { Visor } from '@tensorflow/tfjs-vis/dist/visor';
+import { TrainingService, TrainingsData } from '../services/training.service';
 
 @Component({
     selector: 'app-training',
@@ -28,12 +29,11 @@ export class TrainingComponent implements OnInit {
     games: Game[] = [];
     // Step 2 collect trainingsData:
     trainingVsTestingRatio = 90;
-    trainingInput: number[][][];
-    trainingExpectedResult: number[][][];
-    testingInput: number[][][];
-    testingExpectedResult: number[][][];
 
-    constructor() { }
+    trainingData: TrainingsData;
+    testingData: TrainingsData;
+
+    constructor(private trainingService: TrainingService) { }
 
     ngOnInit(): void {
         this.visor = tfvis.visor();
@@ -96,11 +96,8 @@ export class TrainingComponent implements OnInit {
             .filter(history => history.lastPlayerColor === PlayerColor.RED);
 
 
-        this.trainingInput = [];
-        this.trainingExpectedResult = [];
-
-        this.testingInput = [];
-        this.testingExpectedResult = [];
+        this.trainingData = {inputs: [], expectedResults: []};
+        this.testingData = {inputs: [], expectedResults: []};
 
 
 
@@ -116,27 +113,13 @@ export class TrainingComponent implements OnInit {
             const usedForTraining = Math.random() < (this.trainingVsTestingRatio / 100);
 
             if (usedForTraining) {
-                this.trainingInput.push(playGround);
-                this.trainingExpectedResult.push(expectedResult);
+                this.trainingData.inputs.push(playGround);
+                this.trainingData.expectedResults.push(_.flatten(expectedResult));
             } else {
-                this.testingInput.push(playGround);
-                this.testingExpectedResult.push(expectedResult);
+                this.testingData.inputs.push(playGround);
+                this.testingData.expectedResults.push(_.flatten(expectedResult));
             }
         });
-
-        // console.log('trainingInput.0', this.trainingInput[0]);
-        // console.log('trainingInput.1', this.trainingInput[1]);
-        // console.log('trainingInput.2', this.trainingInput[2]);
-
-        // console.log('trainingExpectedResult.0', this.trainingExpectedResult[0]);
-        // console.log('trainingExpectedResult.1', this.trainingExpectedResult[1]);
-        // console.log('trainingExpectedResult.2', this.trainingExpectedResult[2]);
-
-        // console.log('trainingInput.length', this.trainingInput.length);
-        // console.log('trainingExpectedResult.length', this.trainingExpectedResult.length);
-        // console.log('testingInput.length', this.testingInput.length);
-        // console.log('testingExpectedResult.length', this.testingExpectedResult.length);
-
 
     }
 
@@ -154,42 +137,8 @@ export class TrainingComponent implements OnInit {
         };
         const callbacks = tfvis.show.fitCallbacks(container, metrics);
 
-        const [trainXs, trainYs] = tf.tidy(() => {
-            return [tf.tensor(this.trainingInput, [this.trainingInput.length, 3, 3, 1]),
-            tf.tensor(this.trainingExpectedResult, [this.trainingInput.length, 3, 3]).reshape([this.trainingInput.length, 9])];
-        });
-        const [testXs, testYs] = tf.tidy(() => {
-            return [tf.tensor(this.testingInput, [this.testingInput.length, 3, 3, 1]),
-            tf.tensor(this.testingExpectedResult, [this.testingInput.length, 3, 3]).reshape([this.testingInput.length, 9])];
-        });
 
-
-        const model = tf.sequential();
-        model.add(tf.layers.conv2d({
-            inputShape: [3, 3, 1],
-            kernelSize: 1,
-            filters: 8,
-            activation: 'relu'
-        }));
-        model.add(tf.layers.conv2d({ kernelSize: 3, filters: 8, activation: 'relu' }));
-        model.add(tf.layers.flatten({}));
-        model.add(tf.layers.dense({ units: 100, activation: 'relu' }));
-        model.add(tf.layers.dropout({ rate: 0.1, trainable: true }));
-        model.add(tf.layers.dense({ units: 100, activation: 'relu' }));
-        model.add(tf.layers.dropout({ rate: 0.1, trainable: true }));
-        model.add(tf.layers.dense({ units: 50, activation: 'relu' }));
-        // model.add(tf.layers.reshape({ targetShape: [3, 3] }));
-        model.add(tf.layers.dense({ units: 9, activation: 'sigmoid' }));
-
-        model.compile({ loss: 'binaryCrossentropy', optimizer: 'adam' });
-
-        model.fit(trainXs, trainYs, {
-            batchSize: 100,
-            validationData: [testXs, testYs],
-            epochs: 10,
-            shuffle: true,
-            callbacks
-        });
+        this.trainingService.trainModel(this.trainingData, this.testingData, callbacks);
 
     }
 }

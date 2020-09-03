@@ -1,7 +1,7 @@
 <h2>1. generate games</h2>
 <p>This will generate multiple games between MinMax-Player (perfect moves) and Random-Player (get most branches).</p>
 <p>
-    <p-spinner [(ngModel)]="gamesToGenerate" inputId="gamesToGenerate" [min]="0" [max]="1000" [step]="10"
+    <p-spinner [(ngModel)]="gamesToGenerate" inputId="gamesToGenerate" [min]="0" [max]="10000" [step]="10"
         [disabled]="gamesAreGenerating" ngClass="input"></p-spinner>
     Games
 </p>
@@ -26,9 +26,9 @@
 <p>
     <button pButton type="button" label="Collect Trainings Data" (click)="collectTrainingsData()"></button>
 </p>
-<ul *ngIf="trainingInput && testingInput">
-    <li>{{trainingInput.length}} Training Sets</li>
-    <li>{{testingInput.length}} Testing Sets</li>
+<ul *ngIf="trainingData && testingData">
+    <li>{{trainingData.inputs.length}} Training Sets</li>
+    <li>{{testingData.inputs.length}} Testing Sets</li>
 </ul>
 
 <h2>2. train neural net</h2>

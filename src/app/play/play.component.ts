@@ -7,6 +7,8 @@ import { PlayerColor, PlayerColorUtil } from '../model/player-color';
 import { RandomPlayer } from '../model/random-player';
 import * as _ from 'lodash';
 import { MinimaxPlayer } from '../model/minimax-player';
+import { TensorflowPlayer } from '../model/tensorflow-player';
+import { TrainingService } from '../services/training.service';
 
 @Component({
     selector: 'app-play',
@@ -27,7 +29,7 @@ export class PlayComponent implements OnInit {
 
     public playGround: PlayGround;
 
-    constructor() { }
+    constructor(private trainingService: TrainingService) { }
 
     ngOnInit() {
         // this.availablePlayers = [
@@ -40,7 +42,8 @@ export class PlayComponent implements OnInit {
         this.availablePlayers = [];
         this.availablePlayers.push(HumanPlayer.factory);
         this.availablePlayers.push(RandomPlayer.factory);
-        this.availablePlayers.push(MinimaxPlayer.createFactory('Robot-Minimax', 5000));
+        this.availablePlayers.push(MinimaxPlayer.factory);
+        this.availablePlayers.push(TensorflowPlayer.createFactory(this.trainingService, 300));
     }
     restartGame(): void {
         this.stopGame();
