@@ -10,6 +10,8 @@ import { TestingChartBarUtils } from './testing-chart-bar-utils';
 import * as _ from 'lodash';
 import { identifierModuleUrl } from '@angular/compiler';
 import { timeout } from 'q';
+import { TensorflowPlayer } from '../model/tensorflow-player';
+import { TrainingService } from '../services/training.service';
 
 @Component({
     selector: 'app-testing',
@@ -37,7 +39,7 @@ export class TestingComponent implements OnInit {
     public storedData: any;
     public storedOptions: any;
 
-    constructor() { }
+    constructor(private trainingService: TrainingService) { }
 
 
     ngOnInit() {
@@ -51,6 +53,9 @@ export class TestingComponent implements OnInit {
             'Robot-Minimax with DRAW Adjustment', 0, { withDepthAdjustment: false, withDrawAdjustment: true }));
         this.availablePlayers.push(MinimaxPlayer.createFactory(
             'Robot-Minimax Perfect', 0, { withDepthAdjustment: true, withDrawAdjustment: true }));
+
+        this.availablePlayers.push(TensorflowPlayer.createFactory(this.trainingService, 0));
+
         this.player1 = this.availablePlayers[0];
         this.player2 = this.availablePlayers[4];
 

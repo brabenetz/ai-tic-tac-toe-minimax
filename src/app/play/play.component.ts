@@ -9,6 +9,8 @@ import * as _ from 'lodash';
 import { MinimaxPlayer } from '../model/minimax-player';
 import { TensorflowPlayer } from '../model/tensorflow-player';
 import { TrainingService } from '../services/training.service';
+import { PredictionType } from '../play-ground/play-ground.component';
+import { SelectItem } from 'primeng/api/selectitem';
 
 @Component({
     selector: 'app-play',
@@ -18,12 +20,13 @@ import { TrainingService } from '../services/training.service';
 export class PlayComponent implements OnInit {
 
     public availablePlayers: PlayerFactory[];
+    public availablePredictions: SelectItem[] = ['No Prediction', 'MiniMax', 'Tensorflow'].map(v => ({ label: v, value: v }));
 
     public player1 = HumanPlayer.factory;
 
     public player2 = HumanPlayer.factory;
 
-    public showMinimaxPrediction = false;
+    public showPrediction: PredictionType;
 
     public gameIsRunning = false;
 
@@ -66,7 +69,7 @@ export class PlayComponent implements OnInit {
     }
 
     areBothPlayerHuman() {
-        return this.player1 === HumanPlayer.factory && this.player2  === HumanPlayer.factory;
+        return this.player1 === HumanPlayer.factory && this.player2 === HumanPlayer.factory;
     }
 
     revertLastMove() {

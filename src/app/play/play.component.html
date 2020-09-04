@@ -8,7 +8,9 @@
         <p-dropdown [options]="availablePlayers" [(ngModel)]="player2" inputId="player2" [disabled]="gameIsRunning"
             optionLabel="name"></p-dropdown>
         <br>
-        <p-checkbox  label="show Minimax Prediction" [(ngModel)]="showMinimaxPrediction" inputId="showMinimaxPrediction" binary="true"></p-checkbox>
+        <label for="player2">Show Prediction: </label>
+        <p-dropdown [options]="availablePredictions" [(ngModel)]="showPrediction" inputId="showPrediction" [disabled]="gameIsRunning"></p-dropdown>
+        <br>
     </p>
     <p>
         <ng-container *ngIf="!gameIsRunning">
@@ -19,7 +21,7 @@
             <button pButton type="button" label="Restart" (click)="restartGame()"></button>
         </ng-container>
     </p>
-    <app-play-ground [playGround]="playGround" [showMinimaxPrediction]="showMinimaxPrediction" *ngIf="gameIsRunning"></app-play-ground>
+    <app-play-ground [playGround]="playGround" [showPrediction]="showPrediction" *ngIf="gameIsRunning"></app-play-ground>
     <p *ngIf="areBothPlayerHuman() && gameIsRunning">
             <button pButton type="button" label="Revert Last Move" (click)="revertLastMove()"></button>
     </p>

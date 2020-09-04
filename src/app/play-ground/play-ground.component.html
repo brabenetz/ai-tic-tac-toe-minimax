@@ -19,6 +19,7 @@
             <div class="row">
                 <ng-container *ngFor="let cell of row; let rowIdx = index">
                     <div *ngIf="playerColorName(cell) === 'RED'" class="{{getCellCss(colIdx, rowIdx)}}" (click)="click(colIdx, rowIdx)">
+                        <div class="prediction" *ngIf="showPrediction">{{getPrediction(colIdx, rowIdx)}}</div>
                         <svg width="100%" height="100%" viewBox="0 0 100 100">
                             <line x1="20" y1="20" x2="80" y2="80" stroke="red" stroke-linecap="round" stroke-width="5" class="line line1" />
                             <line x1="80" y1="20" x2="20" y2="80" stroke="red" stroke-linecap="round" stroke-width="5" class="line line2" />
@@ -26,6 +27,7 @@
                         </svg>
                     </div>
                     <div *ngIf="playerColorName(cell) === 'GREEN'" class="{{getCellCss(colIdx, rowIdx)}}" (click)="click(colIdx, rowIdx)">
+                        <div class="prediction" *ngIf="showPrediction">{{getPrediction(colIdx, rowIdx)}}</div>
                         <svg width="100%" height="100%" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="40" stroke="green" stroke-width="5" stroke-linecap="round" class="circle" fill-opacity="0" />
                             
@@ -42,7 +44,7 @@
 
                     </div>
                     <div *ngIf="playerColorName(cell) === 'FREE'" class="{{getCellCss(colIdx, rowIdx)}}" (click)="click(colIdx, rowIdx)">
-                        <ng-container *ngIf="showMinimaxPrediction">{{getMinimaxPrediction(colIdx, rowIdx)}}</ng-container>
+                        <div class="prediction" *ngIf="showPrediction">{{getPrediction(colIdx, rowIdx)}}</div>
                     </div>
                 </ng-container>
             </div>

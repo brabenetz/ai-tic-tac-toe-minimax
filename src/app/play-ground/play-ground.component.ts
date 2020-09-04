@@ -5,6 +5,9 @@ import { HumanPlayer } from '../model/human-player';
 import { MinimaxPlayer } from '../model/minimax-player';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
+import { TrainingService } from '../services/training.service';
+
+export type PredictionType = 'MiniMax' | 'Tensorflow';
 
 @Component({
     selector: 'app-play-ground',
@@ -14,12 +17,12 @@ import { Subscription } from 'rxjs';
 export class PlayGroundComponent implements OnChanges {
 
     @Input() playGround: PlayGround;
-    @Input() showMinimaxPrediction: boolean;
+    @Input() showPrediction: PredictionType;
 
     private gamePlayGroundSubscription: Subscription;
-    private minimaxPrediction: number[][];
+    private prediction: number[][];
 
-    constructor() { }
+    constructor(private trainingService: TrainingService) { }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (_.get(changes, 'playGround')) {
@@ -28,10 +31,14 @@ export class PlayGroundComponent implements OnChanges {
             }
             this.gamePlayGroundSubscription = this.playGround.game.playGroundSubject
                 .subscribe((game) => {
-                    if (this.showMinimaxPrediction) {
+                    if (this.showPrediction === 'MiniMax') {
                         const gameClone = game.copy();
                         const currentPlayerColor = gameClone.nextPlayerColor;
-                        this.minimaxPrediction = MinimaxPlayer.minimax(gameClone, currentPlayerColor).scores;
+                        this.prediction = MinimaxPlayer.minimax(gameClone, currentPlayerColor).scores;
+                    } else if (this.showPrediction === 'Tensorflow') {
+                        const gameClone = game.copy();
+                        const currentPlayerColor = gameClone.nextPlayerColor;
+                        this.prediction = this.trainingService.predictNextMove(gameClone.playGround, currentPlayerColor).scores;
                     }
                 });
         }
@@ -52,14 +59,20 @@ export class PlayGroundComponent implements OnChanges {
         }
     }
 
-    getMinimaxPrediction(col: number, row: number) {
-        if (!this.minimaxPrediction) {
+    getPrediction(col: number, row: number): string {
+        if (!this.prediction) {
             return;
         }
-        const score = this.minimaxPrediction[col][row];
-        if (score !== undefined) {
-            const scoreName = MinimaxPlayer.getScoreName(score);
-            return `${scoreName} (${score})`;
+        const score = this.prediction[col][row];
+        if (this.showPrediction === 'MiniMax') {
+            if (score !== undefined) {
+                const scoreName = MinimaxPlayer.getScoreName(score);
+                return `${scoreName} (${score})`;
+            } else {
+                return '';
+            }
+        } else if (this.showPrediction === 'Tensorflow') {
+            return `${score}`;
         }
     }
     getCellCss(col: number, row: number): string {

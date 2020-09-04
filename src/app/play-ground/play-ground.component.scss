@@ -81,6 +81,12 @@ $cell-width: 100px;
                         animation-iteration-count: 1;
                     }
                 }
+
+                .prediction {
+                    width: 0;
+                    height: 0;
+                    overflow: visible;
+                }
             }
         }
     }
