@@ -96,10 +96,12 @@ export class TrainingComponent implements OnInit {
             .filter(history => history.lastPlayerColor === PlayerColor.RED);
 
 
-        this.trainingData = {inputs: [], expectedResults: []};
-        this.testingData = {inputs: [], expectedResults: []};
+        this.trainingData = { inputs: [], expectedResults: [] };
+        this.testingData = { inputs: [], expectedResults: [] };
 
-
+        // convert minimax-steps to trainings-data
+        type TrainingDataItem = { input: PlayerColor[][]; expectedResult: number[]; };
+        const allTrainingDataItems: TrainingDataItem[] = [];
 
         minimaxSteps.forEach(minimaxStep => {
             const playGround = _.cloneDeep(minimaxStep.playGround);
@@ -110,14 +112,38 @@ export class TrainingComponent implements OnInit {
             const expectedResult: number[][] = playGround.map((row) => row.map(() => 0));
             expectedResult[minimaxStep.lastPosition.col][minimaxStep.lastPosition.row] = 1;
 
+            allTrainingDataItems.push({
+                input: playGround,
+                expectedResult: _.flatten(expectedResult),
+            });
+        });
+
+        // collect only unique data (I expect 382 unique cases at most):
+        const uniqueTrainingDataItemsKeys: string[] = [];
+        const uniqueTrainingDataItems: TrainingDataItem[] = [];
+        allTrainingDataItems.forEach(trainingDataItem => {
+            const key = _.flatten(trainingDataItem.input).toString();
+            if (uniqueTrainingDataItemsKeys.includes(key)) {
+                // already processed
+                return;
+            }
+            uniqueTrainingDataItemsKeys.push(key);
+            uniqueTrainingDataItems.push(trainingDataItem);
+        });
+
+        console.log('allTrainingDataItems', allTrainingDataItems.length);
+        console.log('uniqueTrainingDataItems', uniqueTrainingDataItems.length);
+
+        // split training and testing data
+        uniqueTrainingDataItems.forEach((trainingDataItem) => {
             const usedForTraining = Math.random() < (this.trainingVsTestingRatio / 100);
 
             if (usedForTraining) {
-                this.trainingData.inputs.push(playGround);
-                this.trainingData.expectedResults.push(_.flatten(expectedResult));
+                this.trainingData.inputs.push(trainingDataItem.input);
+                this.trainingData.expectedResults.push(trainingDataItem.expectedResult);
             } else {
-                this.testingData.inputs.push(playGround);
-                this.testingData.expectedResults.push(_.flatten(expectedResult));
+                this.testingData.inputs.push(trainingDataItem.input);
+                this.testingData.expectedResults.push(trainingDataItem.expectedResult);
             }
         });
 
@@ -138,7 +164,11 @@ export class TrainingComponent implements OnInit {
         const callbacks = tfvis.show.fitCallbacks(container, metrics);
 
 
-        this.trainingService.trainModel(this.trainingData, this.testingData, callbacks);
+        this.trainingService.trainModel(this.trainingData, this.testingData, callbacks, {
+            batchSize: 100,
+            epochs: 100,
+            shuffle: true,
+        });
 
     }
 }
