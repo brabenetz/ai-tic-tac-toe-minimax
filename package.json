@@ -22,7 +22,7 @@
         "@angular/router": "~10.0.14",
         "@tensorflow/tfjs": "^2.3.0",
         "@tensorflow/tfjs-vis": "^1.4.3",
-        "chart.js": "^2.9.3",
+        "chart.js": "^2.9.4",
         "lodash": "^4.17.20",
         "node-cache": "^5.1.2",
         "primeflex": "^2.0.0",
